@@ -10092,8 +10092,12 @@ require.register("component-underscore/index.js", function(exports, require, mod
 });
 require.register("tcs-charts/js/speedo.js", function(exports, require, module){
 (function() {
-  var Speedo,
+  var Speedo, d3, _,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  _ = require("underscore");
+
+  d3 = require("d3");
 
   module.exports = Speedo = (function() {
     Speedo.prototype.defaults = {
