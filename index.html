@@ -83,16 +83,17 @@
   <script>
     
     Speedo = require( "tcs-charts" );
-    speedo = new Speedo( "#example" );
+    speedo = new Speedo( "#example", 30, { width: 300 } );
 
 
     gui = new dat.GUI({ autoPlace: false });
-    $( "#example" ).append( gui.domElement )
+    $( "#example" ).append( gui.domElement );
+    //gui.closed = true
 
     gui.add( speedo, 'value', 0, 100).listen(); 
 
     f2 = gui.addFolder('Metrics') 
-    f2.add( speedo, 'width', 30, 800); 
+    f2.add( speedo, 'width', 30, 590); 
     f2.add( speedo, 'margin', 0, 50); 
     f2.add( speedo, 'thicknessFactor', .35, 2);
     f2.add( speedo, 'needleLengthFactor', .35, 2); 
@@ -103,9 +104,38 @@
     f3.addColor( speedo, 'bgColor');
     f3.addColor( speedo, 'startColor');
     f3.addColor( speedo, 'endColor'); 
+    f3.addColor( speedo, 'needleColor'); 
 
 
-    gui.add( speedo, 'animationDuration', 100, 1000); 
+    gui.add( speedo, 'animationDuration', 100, 1000);
+
+    var intervall = new ( function(){
+      var running = false;
+      var timeout = null;
+
+      var fnIntervall = function(){
+        if( running ){
+          speedo._set(  Math.random() )
+          timeout = setTimeout( fnIntervall, 1500 );
+          return
+        }
+      }
+
+      this[ 'toggle_intervall' ] = function(){
+        clearTimeout( timeout )
+        if( running && timeout != undefined ){
+          running = false;
+        }else{
+          running = true;
+          fnIntervall();
+        }
+      }
+    });
+
+    gui.add( intervall, 'toggle_intervall' ); 
+
+    intervall.toggle_intervall()
+    
 
   </script>
 </html>
