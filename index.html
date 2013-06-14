@@ -53,11 +53,54 @@
       </nav>
       <section>
         <h1>
-<a name="tcs-charts" class="anchor" href="#tcs-charts"><span class="octicon octicon-link"></span></a>tcs-charts</h1>
+<h1>tcs-charts</h1>
 
 <p>D3 Charting helpers</p>
 
-<h3>Example</h3>
+<h2>Speedo</h2>
+
+<h4>init</h4>
+
+<p>```js
+Speedo = require( "tcs-charts" ).Speedo;</p>
+
+<p>mySpeedo = new Speedo( "#example", 30, { width: 300 } );
+```</p>
+
+<p>First you have to require the "tcs-charts" and get the Speedo component.</p>
+
+<p><strong><code>new Speedo( targetSelector [, startValue ][, options ] )</code></strong></p>
+
+<p><strong>Arguments</strong></p>
+
+<ul>
+<li><strong>targetSelector</strong> : <em>( <code>String</code> required )</em><br/>
+A simple CSS selector where the speedo should be placed</li>
+<li><strong>startValue</strong> : <em>( <code>Number</code> optional: default = <code>0</code> )</em><br/>
+A value between <code>0</code> - <code>100</code> to define the start value</li>
+<li><strong>options</strong> : <em>( <code>Object</code> optional )</em><br/>
+Configuration object
+
+<ul>
+<li><strong>width</strong> : <em>( <code>Number</code> default = <code>500</code> )</em><br/>
+The with of the speedo</li>
+<li><strong>margin</strong> : <em>( <code>Number</code> default = <code>0</code> )</em><br/>
+The margins arround the speedo. Needed for a -90° -> 90° to not cut off the half of the needle at the edges.</li>
+</ul>
+</li>
+</ul>
+
+
+<p><strong>Getter/Setter</strong></p>
+
+<ul>
+<li><strong>mySpeedo.value</strong> : <em>( <code>Number</code> )</em><br/>
+The new value of the speedo</li>
+<li><strong>mySpeedo.width</strong> : <em>( <code>Number</code> )</em><br/>
+The with of the speedo</li>
+<li><strong>mySpeedo.margin</strong> : <em>( <code>Number</code> )</em><br/>
+The margins arround the speedo.</li>
+</ul>
 
 <div id="example"></div>
       </section>
