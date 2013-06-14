@@ -10,7 +10,7 @@
   },
   "development": {},
   "license": "MIT",
-  "main": "index.js",
+  "main": "js/speedo.js",
   "scripts": [
     "js/speedo.js"
   ]
