@@ -1,3 +1,6 @@
+_ = require( "underscore" )
+d3 = require( "d3" )
+
 module.exports = class Speedo
   
   defaults: 
