@@ -10090,6 +10090,15 @@ require.register("component-underscore/index.js", function(exports, require, mod
 }).call(this);
 
 });
+require.register("tcs-charts/js/index.js", function(exports, require, module){
+(function() {
+  module.exports = {
+    Speedo: require("./speedo")
+  };
+
+}).call(this);
+
+});
 require.register("tcs-charts/js/speedo.js", function(exports, require, module){
 (function() {
   var Speedo, d3, _,
@@ -10386,5 +10395,5 @@ require.alias("mbostock-d3/index-browserify.js", "mbostock-d3/index.js");
 require.alias("component-underscore/index.js", "tcs-charts/deps/underscore/index.js");
 require.alias("component-underscore/index.js", "underscore/index.js");
 
-require.alias("tcs-charts/js/speedo.js", "tcs-charts/index.js");
+require.alias("tcs-charts/js/index.js", "tcs-charts/index.js");
 
