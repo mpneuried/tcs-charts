@@ -1,4 +1,4 @@
-Speedo = require( "tcs-charts" );
+Speedo = require( "tcs-charts" ).Speedo;
 speedo = new Speedo( "#example", 30, { width: 300, margin: 20 } );
 
 
