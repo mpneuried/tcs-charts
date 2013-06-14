@@ -36,7 +36,7 @@ module.exports = class Speedo
   
   constructor: ( @target, startValue = 0, options )->
     @_initOptions( options, true )
-    @_value = startValue
+    #@_value = startValue
     
     oDef = 
       get: =>
@@ -47,7 +47,9 @@ module.exports = class Speedo
         @_set( _v ) 
         return
     @define( "value", oDef, @ )
-  
+  	
+    @value = startValue
+
     @create()    
     return
   

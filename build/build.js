@@ -10162,7 +10162,6 @@ require.register("tcs-charts/js/speedo.js", function(exports, require, module){
       this.setter = __bind(this.setter, this);
       this.getter = __bind(this.getter, this);
       this._initOptions(options, true);
-      this._value = startValue;
       oDef = {
         get: function() {
           return _this._value * 100;
@@ -10175,6 +10174,7 @@ require.register("tcs-charts/js/speedo.js", function(exports, require, module){
         }
       };
       this.define("value", oDef, this);
+      this.value = startValue;
       this.create();
       return;
     }
