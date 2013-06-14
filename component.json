@@ -1,0 +1,17 @@
+{
+  "name": "tcs-charts",
+  "repo": "mpneuried/tcs-charts",
+  "description": "D3 Charting helpers",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {
+    "mbostock/d3": "*",
+    "component/underscore": "*"   
+  },
+  "development": {},
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": [
+    "js/speedo.js"
+  ]
+}
