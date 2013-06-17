@@ -107,6 +107,15 @@ The duration of the animation in `ms`
 D3 charts and some basic javascript will not work within IE 8 and lower.
 So the constructor of every Staty module will return an Error object if a usage is not possible.
 
+So for initialisation ou have to init like this:
+
+```js
+gauge = new Gauge( "#test", 50, { width: 750 } );
+if( gauge instanceof Error ){
+	// .. do something for IE8 and lower
+}
+```
+
 ## Changelogs
 
 ### 0.1.1
