@@ -1,9 +1,9 @@
-Speedo = require( "tcs-charts" );
-speedo = new Speedo( "#example", 30, { width: 300, margin: 20 } );
+Speedo = require( "tcs-charts" ).Speedo;
+speedo = new Speedo( "#speedo-example", 30, { width: 300, margin: 20 } );
 
 
 gui = new dat.GUI({ autoPlace: false });
-$( "#example" ).append( gui.domElement );
+$( "#speedo-example" ).append( gui.domElement );
 //gui.closed = true
 
 

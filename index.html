@@ -16,11 +16,12 @@
     <script src="https://raw.github.com/mpneuried/tcs-charts/master/build/build.js"></script>
 
     <style>
-      #example{
+      #speedo-example{
         position: relative;
         border: 1px solid #ddd;
+        margin-bottom: 20px;
       }
-      #example .dg.main{
+      #speedo-example .dg.main{
         position: absolute;
         top: 0;
         right: 0;
@@ -57,9 +58,148 @@
 
 <p>D3 Charting helpers</p>
 
-<h3>Example</h3>
+<h1>Speedo</h1>
 
-<div id="example"></div>
+<h2>Example</h2>
+
+<div id="speedo-example"></div>
+
+
+<h2>Basic usage</h2>
+
+<div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"build.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"example"</span><span class="nt">&gt;&lt;/div&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+  <span class="nt">&lt;script&gt;</span>
+    <span class="nx">Speedo</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s2">"tcs-charts"</span> <span class="p">).</span><span class="nx">Speedo</span><span class="p">;</span>
+    <span class="nx">mySpeedo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Speedo</span><span class="p">()</span>
+    <span class="nx">setIntervall</span><span class="p">(</span> <span class="kd">function</span><span class="p">(){</span>
+      <span class="nx">mySpeedo</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span>
+    <span class="p">},</span> <span class="mi">1000</span> <span class="p">);</span>    
+  <span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+<p>This will init the default speedo and set a random value between 0 - 100 every second.</p>
+
+<h2>Init</h2>
+
+<div class="highlight"><pre><span class="nx">Speedo</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s2">"tcs-charts"</span> <span class="p">).</span><span class="nx">Speedo</span><span class="p">;</span>
+
+<span class="nx">mySpeedo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Speedo</span><span class="p">(</span> <span class="s2">"#example"</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="p">{</span> <span class="nx">width</span><span class="o">:</span> <span class="mi">300</span> <span class="p">}</span> <span class="p">);</span>
+</pre></div>
+
+<p>First you have to require the "tcs-charts" and get the Speedo component.</p>
+
+<p><strong><code>new Speedo( targetSelector [, startValue ][, options ] )</code></strong></p>
+
+<h2>Arguments</h2>
+
+<ul>
+<li><strong>targetSelector</strong> : <em>( <code>String</code> required )</em><br/>
+A simple CSS selector where the speedo should be placed</li>
+<li><strong>startValue</strong> : <em>( <code>Number</code> optional: default = <code>0</code> )</em><br/>
+A value between <code>0</code> and <code>100</code> to define the start value</li>
+<li><strong>options</strong> : <em>( <code>Object</code> optional )</em><br/>
+Configuration object
+
+<ul>
+<li><strong>width</strong> : <em>( <code>Number</code> default = <code>500</code> )</em><br/>
+The with of the speedo</li>
+<li><strong>margin</strong> : <em>( <code>Number</code> default = <code>0</code> )</em><br/>
+The margins arround the speedo. Needed for a -90° -> 90° to not cut off the half of the needle at the edges.</li>
+<li><strong>startAngle</strong> : <em>( <code>Number</code> default = <code>-75</code> )</em><br/>
+The left starting Angel. The north point is <code>0°</code> so it's usually a negative number. Possible are angles between <code>-90°</code> to <code>90°</code></li>
+<li><strong>endAngle</strong> : <em>( <code>Number</code> default = <code>75</code> )</em><br/>
+The right end Angel. The north point is <code>0°</code> so it's usually a negative number. Possible are angles between <code>-90°</code> to <code>90°</code></li>
+<li><strong>thicknessFactor</strong> : <em>( <code>Float</code> default = <code>0.8</code> )</em><br/>
+A factor to change the thickness of the angle display.</li>
+<li><strong>needleLengthFactor</strong> : <em>( <code>Float</code> default = <code>thicknessFactor</code> )</em><br/>
+A factor to change the length of the needle. If set to <code>0</code> no neelde will be hidden.</li>
+<li><strong>bgColor</strong> : <em>( <code>String</code> default = <code>#ddd</code> )</em><br/>
+The color of the background.</li>
+<li><strong>needleColor</strong> : <em>( <code>String</code> default = <code>#333</code> )</em><br/>
+The color of the needle.</li>
+<li><strong>startColor</strong> : <em>( <code>String</code> default = <code>#B4EB57</code> )</em><br/>
+The starting color witch references the value <code>0</code></li>
+<li><strong>endColor</strong> : <em>( <code>String</code> default = <code>#D10000</code> )</em><br/>
+The ending color witch references the value <code>100</code></li>
+<li><strong>fixedColor</strong> : <em>( <code>String</code> default = <code>null</code> )</em><br/>
+A fixed Color. This will overwrite the <code>startColor</code> and <code>endColor</code> and displays a solid color through the whole vaule range.</li>
+<li><strong>animationDuration</strong> : <em>( <code>Number</code> default = 500 )</em><br/>
+The duration of the animation in <code>ms</code></li>
+</ul>
+</li>
+</ul>
+
+
+<h2>Getter/Setter</h2>
+
+<ul>
+<li><strong>mySpeedo.value</strong> : <em>( <code>Number</code> )</em><br/>
+The new value of the speedo</li>
+<li><strong>mySpeedo.width</strong> : <em>( <code>Number</code> )</em><br/>
+The with of the speedo</li>
+<li><strong>mySpeedo.margin</strong> : <em>( <code>Number</code> )</em><br/>
+The margins arround the speedo.</li>
+<li><strong>mySpeedo.startAngle</strong> : <em>( <code>Number</code> default = <code>-75</code> )</em><br/>
+The left starting Angel. The north point is <code>0°</code> so it's usually a negative number. Possible are angles between <code>-90°</code> to <code>90°</code></li>
+<li><strong>mySpeedo.endAngle</strong> : <em>( <code>Number</code> default = <code>75</code> )</em><br/>
+The right end Angel. The north point is <code>0°</code> so it's usually a negative number. Possible are angles between <code>-90°</code> to <code>90°</code></li>
+<li><strong>mySpeedo.thicknessFactor</strong> : <em>( <code>Float</code> default = <code>0.8</code> )</em><br/>
+A factor to change the thickness of the angle display.</li>
+<li><strong>mySpeedo.needleLengthFactor</strong> : <em>( <code>Float</code> default = <code>thicknessFactor</code> )</em><br/>
+A factor to change the length of the needle. If set to <code>0</code> no neelde will be hidden.</li>
+<li><strong>mySpeedo.bgColor</strong> : <em>( <code>String</code> default = <code>#ddd</code> )</em><br/>
+The color of the background.</li>
+<li><strong>mySpeedo.needleColor</strong> : <em>( <code>String</code> default = <code>#333</code> )</em><br/>
+The color of the needle.</li>
+<li><strong>mySpeedo.startColor</strong> : <em>( <code>String</code> default = <code>#B4EB57</code> )</em><br/>
+The starting color witch references the value <code>0</code></li>
+<li><strong>mySpeedo.endColor</strong> : <em>( <code>String</code> default = <code>#D10000</code> )</em><br/>
+The ending color witch references the value <code>100</code></li>
+<li><strong>mySpeedo.fixedColor</strong> : <em>( <code>String</code> default = <code>null</code> )</em><br/>
+A fixed Color. This will overwrite the <code>startColor</code> and <code>endColor</code> and displays a solid color through the whole vaule range.</li>
+<li><strong>mySpeedo.animationDuration</strong> : <em>( <code>Number</code> default = 500 )</em><br/>
+The duration of the animation in <code>ms</code></li>
+</ul>
+
+
+<h1>Changelogs</h1>
+
+<h2>Work in progress</h2>
+
+<p><code>tcs-charts</code> is work in progress. Your ideas, suggestions etc. are very welcome.</p>
+
+<h1>License</h1>
+
+<p>(The MIT License)</p>
+
+<p>Copyright (c) 2010 TCS &lt;dev (at) tcs.de&gt;</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+
       </section>
       <footer>
         <p>Project maintained by <a href="https://github.com/mpneuried">mpneuried</a></p>
