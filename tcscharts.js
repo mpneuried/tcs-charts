@@ -1,4 +1,9 @@
 (function() {
+
+
+}).call(this);
+
+(function() {
   var Gauge, _Gauge,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __slice = [].slice;
@@ -83,6 +88,15 @@
       this.define = __bind(this.define, this);
       this.setter = __bind(this.setter, this);
       this.getter = __bind(this.getter, this);
+      try {
+        Object.defineProperty(this, "testIE", {
+          get: function() {
+            return false;
+          }
+        });
+      } catch (_error) {
+        return new Error("browser-outdated", "tcs-charts not availible on IE8 and lower.");
+      }
       this._initOptions(options, true);
       oDef = {
         get: function() {
@@ -268,5 +282,10 @@
     window.tcscharts || (window.tcscharts = {});
     window.tcscharts.Gauge = _Gauge;
   }
+
+}).call(this);
+
+(function() {
+
 
 }).call(this);

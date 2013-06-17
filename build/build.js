@@ -8992,6 +8992,13 @@ require.register("tcs-charts/js/index.js", function(exports, require, module){
 }).call(this);
 
 });
+require.register("tcs-charts/js/base.js", function(exports, require, module){
+(function() {
+
+
+}).call(this);
+
+});
 require.register("tcs-charts/js/gauge.js", function(exports, require, module){
 (function() {
   var Gauge, _Gauge,
@@ -9078,6 +9085,15 @@ require.register("tcs-charts/js/gauge.js", function(exports, require, module){
       this.define = __bind(this.define, this);
       this.setter = __bind(this.setter, this);
       this.getter = __bind(this.getter, this);
+      try {
+        Object.defineProperty(this, "testIE", {
+          get: function() {
+            return false;
+          }
+        });
+      } catch (_error) {
+        return new Error("browser-outdated", "tcs-charts not availible on IE8 and lower.");
+      }
       this._initOptions(options, true);
       oDef = {
         get: function() {
@@ -9263,6 +9279,13 @@ require.register("tcs-charts/js/gauge.js", function(exports, require, module){
     window.tcscharts || (window.tcscharts = {});
     window.tcscharts.Gauge = _Gauge;
   }
+
+}).call(this);
+
+});
+require.register("tcs-charts/js/timebars.js", function(exports, require, module){
+(function() {
+
 
 }).call(this);
 

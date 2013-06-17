@@ -102,7 +102,16 @@ A fixed Color. This will overwrite the `startColor` and `endColor` and displays 
 - **ySpeedo.animationDuration** : *( `Number` default = 500 )*  
 The duration of the animation in `ms`
 
+## IE Restrictions
+
+D3 charts and some basic javascript will not work within IE 8 and lower.
+So the constructor of every Staty module will return an Error object if a usage is not possible.
+
 ## Changelogs
+
+### 0.1.1
+
+- added IE8 check and return an error if it's not possible to load a stats module
 
 ### 0.1.0
 

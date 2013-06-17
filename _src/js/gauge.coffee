@@ -41,6 +41,11 @@ _Gauge = class Gauge
 		return objects[ 0 ]
 
 	constructor: ( @target, startValue = 0, options )->
+		try
+			Object.defineProperty @, "testIE", get: ->false
+		catch 
+			return new Error( "browser-outdated", "tcs-charts not availible on IE8 and lower." )
+
 		@_initOptions( options, true )
 		#@_value = startValue
 		
