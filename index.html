@@ -12,16 +12,16 @@
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <script src="http://dat-gui.googlecode.com/git/build/dat.gui.min.js"></script>
-    <script src="https://raw.github.com/mpneuried/tcs-charts/master/build/build.js"></script>
+    <script src="http://dat-gui.googlecode.com/git/build/dat.gui.min.js" type="application/javascript"></script>
+    <script src="https://raw.github.com/mpneuried/tcs-charts/master/build/build.min.js" type="application/javascript"></script>
 
     <style>
-      #speedo-example{
+      #gauge-example{
         position: relative;
         border: 1px solid #ddd;
         margin-bottom: 20px;
       }
-      #speedo-example .dg.main{
+      #gauge-example .dg.main{
         position: absolute;
         top: 0;
         right: 0;
@@ -58,11 +58,11 @@
 
 <p>D3 Charting helpers</p>
 
-<h1>Speedo</h1>
+<h1>Gauge</h1>
 
 <h2>Example</h2>
 
-<div id="speedo-example"></div>
+<div id="gauge-example"></div>
 
 
 <h2>Basic usage</h2>
@@ -75,33 +75,33 @@
     <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"example"</span><span class="nt">&gt;&lt;/div&gt;</span>
   <span class="nt">&lt;/body&gt;</span>
   <span class="nt">&lt;script&gt;</span>
-    <span class="nx">Speedo</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s2">"tcs-charts"</span> <span class="p">).</span><span class="nx">Speedo</span><span class="p">;</span>
-    <span class="nx">mySpeedo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Speedo</span><span class="p">()</span>
+    <span class="nx">Gauge</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s2">"tcs-charts"</span> <span class="p">).</span><span class="nx">Gauge</span><span class="p">;</span>
+    <span class="nx">myGauge</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Gauge</span><span class="p">()</span>
     <span class="nx">setIntervall</span><span class="p">(</span> <span class="kd">function</span><span class="p">(){</span>
-      <span class="nx">mySpeedo</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span>
+      <span class="nx">myGauge</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span>
     <span class="p">},</span> <span class="mi">1000</span> <span class="p">);</span>    
   <span class="nt">&lt;/script&gt;</span>
 <span class="nt">&lt;/html&gt;</span>
 </pre></div>
 
-<p>This will init the default speedo and set a random value between 0 - 100 every second.</p>
+<p>This will init the default gauge and set a random value between 0 - 100 every second.</p>
 
 <h2>Init</h2>
 
-<div class="highlight"><pre><span class="nx">Speedo</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s2">"tcs-charts"</span> <span class="p">).</span><span class="nx">Speedo</span><span class="p">;</span>
+<div class="highlight"><pre><span class="nx">Gauge</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s2">"tcs-charts"</span> <span class="p">).</span><span class="nx">Gauge</span><span class="p">;</span>
 
-<span class="nx">mySpeedo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Speedo</span><span class="p">(</span> <span class="s2">"#example"</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="p">{</span> <span class="nx">width</span><span class="o">:</span> <span class="mi">300</span> <span class="p">}</span> <span class="p">);</span>
+<span class="nx">myGauge</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Gauge</span><span class="p">(</span> <span class="s2">"#example"</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="p">{</span> <span class="nx">width</span><span class="o">:</span> <span class="mi">300</span> <span class="p">}</span> <span class="p">);</span>
 </pre></div>
 
-<p>First you have to require the "tcs-charts" and get the Speedo component.</p>
+<p>First you have to require the "tcs-charts" and get the Gauge component.</p>
 
-<p><strong><code>new Speedo( targetSelector [, startValue ][, options ] )</code></strong></p>
+<p><strong><code>new Gauge( targetSelector [, startValue ][, options ] )</code></strong></p>
 
 <h2>Arguments</h2>
 
 <ul>
 <li><strong>targetSelector</strong> : <em>( <code>String</code> required )</em><br/>
-A simple CSS selector where the speedo should be placed</li>
+A simple CSS selector where the gauge should be placed</li>
 <li><strong>startValue</strong> : <em>( <code>Number</code> optional: default = <code>0</code> )</em><br/>
 A value between <code>0</code> and <code>100</code> to define the start value</li>
 <li><strong>options</strong> : <em>( <code>Object</code> optional )</em><br/>
@@ -109,9 +109,9 @@ Configuration object
 
 <ul>
 <li><strong>width</strong> : <em>( <code>Number</code> default = <code>500</code> )</em><br/>
-The with of the speedo</li>
+The with of the gauge</li>
 <li><strong>margin</strong> : <em>( <code>Number</code> default = <code>0</code> )</em><br/>
-The margins arround the speedo. Needed for a -90° -> 90° to not cut off the half of the needle at the edges.</li>
+The margins arround the gauge. Needed for a -90° -> 90° to not cut off the half of the needle at the edges.</li>
 <li><strong>startAngle</strong> : <em>( <code>Number</code> default = <code>-75</code> )</em><br/>
 The left starting Angel. The north point is <code>0°</code> so it's usually a negative number. Possible are angles between <code>-90°</code> to <code>90°</code></li>
 <li><strong>endAngle</strong> : <em>( <code>Number</code> default = <code>75</code> )</em><br/>
@@ -140,31 +140,31 @@ The duration of the animation in <code>ms</code></li>
 <h2>Getter/Setter</h2>
 
 <ul>
-<li><strong>mySpeedo.value</strong> : <em>( <code>Number</code> )</em><br/>
-The new value of the speedo</li>
-<li><strong>mySpeedo.width</strong> : <em>( <code>Number</code> )</em><br/>
-The with of the speedo</li>
-<li><strong>mySpeedo.margin</strong> : <em>( <code>Number</code> )</em><br/>
-The margins arround the speedo.</li>
-<li><strong>mySpeedo.startAngle</strong> : <em>( <code>Number</code> default = <code>-75</code> )</em><br/>
+<li><strong>myGauge.value</strong> : <em>( <code>Number</code> )</em><br/>
+The new value of the gauge</li>
+<li><strong>myGauge.width</strong> : <em>( <code>Number</code> )</em><br/>
+The with of the gauge</li>
+<li><strong>myGauge.margin</strong> : <em>( <code>Number</code> )</em><br/>
+The margins arround the gauge.</li>
+<li><strong>myGauge.startAngle</strong> : <em>( <code>Number</code> default = <code>-75</code> )</em><br/>
 The left starting Angel. The north point is <code>0°</code> so it's usually a negative number. Possible are angles between <code>-90°</code> to <code>90°</code></li>
-<li><strong>mySpeedo.endAngle</strong> : <em>( <code>Number</code> default = <code>75</code> )</em><br/>
+<li><strong>myGauge.endAngle</strong> : <em>( <code>Number</code> default = <code>75</code> )</em><br/>
 The right end Angel. The north point is <code>0°</code> so it's usually a negative number. Possible are angles between <code>-90°</code> to <code>90°</code></li>
-<li><strong>mySpeedo.thicknessFactor</strong> : <em>( <code>Float</code> default = <code>0.8</code> )</em><br/>
+<li><strong>myGauge.thicknessFactor</strong> : <em>( <code>Float</code> default = <code>0.8</code> )</em><br/>
 A factor to change the thickness of the angle display.</li>
-<li><strong>mySpeedo.needleLengthFactor</strong> : <em>( <code>Float</code> default = <code>thicknessFactor</code> )</em><br/>
+<li><strong>myGauge.needleLengthFactor</strong> : <em>( <code>Float</code> default = <code>thicknessFactor</code> )</em><br/>
 A factor to change the length of the needle. If set to <code>0</code> no neelde will be hidden.</li>
-<li><strong>mySpeedo.bgColor</strong> : <em>( <code>String</code> default = <code>#ddd</code> )</em><br/>
+<li><strong>myGauge.bgColor</strong> : <em>( <code>String</code> default = <code>#ddd</code> )</em><br/>
 The color of the background.</li>
-<li><strong>mySpeedo.needleColor</strong> : <em>( <code>String</code> default = <code>#333</code> )</em><br/>
+<li><strong>myGauge.needleColor</strong> : <em>( <code>String</code> default = <code>#333</code> )</em><br/>
 The color of the needle.</li>
-<li><strong>mySpeedo.startColor</strong> : <em>( <code>String</code> default = <code>#B4EB57</code> )</em><br/>
+<li><strong>myGauge.startColor</strong> : <em>( <code>String</code> default = <code>#B4EB57</code> )</em><br/>
 The starting color witch references the value <code>0</code></li>
-<li><strong>mySpeedo.endColor</strong> : <em>( <code>String</code> default = <code>#D10000</code> )</em><br/>
+<li><strong>myGauge.endColor</strong> : <em>( <code>String</code> default = <code>#D10000</code> )</em><br/>
 The ending color witch references the value <code>100</code></li>
-<li><strong>mySpeedo.fixedColor</strong> : <em>( <code>String</code> default = <code>null</code> )</em><br/>
+<li><strong>myGauge.fixedColor</strong> : <em>( <code>String</code> default = <code>null</code> )</em><br/>
 A fixed Color. This will overwrite the <code>startColor</code> and <code>endColor</code> and displays a solid color through the whole vaule range.</li>
-<li><strong>mySpeedo.animationDuration</strong> : <em>( <code>Number</code> default = 500 )</em><br/>
+<li><strong>myGauge.animationDuration</strong> : <em>( <code>Number</code> default = 500 )</em><br/>
 The duration of the animation in <code>ms</code></li>
 </ul>
 
@@ -219,5 +219,5 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
           </script>
 
   </body>
-  <script src="javascripts/example_speedo.js"></script>
+  <script src="javascripts/example_gauge.js"></script>
 </html>
