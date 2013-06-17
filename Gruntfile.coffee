@@ -6,7 +6,7 @@ module.exports = (grunt) ->
 		regarde:
 			coffee:
 				files: ["_src/js/*.coffee"]
-				tasks: [ "coffee:base", "component" ]
+				tasks: [ "build" ]
 			#stylus:
 			#	files: ["_src/css/*.styl"]
 			#	tasks: [ "stylus" ]
@@ -21,6 +21,19 @@ module.exports = (grunt) ->
 			options:
 				flatten: false
 				bare: false
+
+		concat: 
+			build:
+				src: ['js/*.js', "!js/index.js"],
+				dest: 'tcscharts.js'
+
+		uglify: 
+			component:
+				src: [ "build/build.js"],
+				dest: 'build/build.min.js'
+			regular:
+				src: ["tcscharts.js"],
+				dest: 'tcscharts.min.js'
 
 		component:
 			build:
@@ -39,10 +52,12 @@ module.exports = (grunt) ->
 	grunt.loadNpmTasks "grunt-regarde"
 	grunt.loadNpmTasks "grunt-contrib-coffee"
 	grunt.loadNpmTasks "grunt-contrib-stylus"
+	grunt.loadNpmTasks "grunt-contrib-concat"
+	grunt.loadNpmTasks "grunt-contrib-uglify"
 	grunt.loadNpmTasks('grunt-component')
 
 	# ALIAS TASKS
 	grunt.registerTask "watch", "regarde"
 	grunt.registerTask "default", "build"
 
-	grunt.registerTask "build", [ "coffee", "component" ]
+	grunt.registerTask "build", [ "coffee", "component", "concat", "uglify" ]

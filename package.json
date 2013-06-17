@@ -1,7 +1,7 @@
 {
   "name": "tcs-charts",
   "description": "D3 Charting helpers",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "homepage": "",
   "keywords": [ ],
@@ -24,6 +24,8 @@
     "grunt-regarde": "*",
     "grunt-contrib-coffee": "*",
     "grunt-contrib-stylus": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-uglify": "*",
     "grunt-component": "*",
     "grunt": "~0.4.0"
   }

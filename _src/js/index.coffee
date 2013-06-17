@@ -1,2 +1,2 @@
 module.exports = 
-	Speedo: require( "./speedo" )
+	Gauge: require( "./gauge" )

@@ -104,9 +104,12 @@ The duration of the animation in `ms`
 
 ## Changelogs
 
-### 0.0.2
+### 0.1.0
 
-
+* Remamed Speedo to Gauge
+* Added non require solution
+* removed dependencie unserscore
+* added concated and compressed result `tcscharts.js`
 
 ### Work in progress
 

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="../components/mbostock-d3/d3.js"></script>
+<script src="../components/component-underscore/index.js"></script>
+<script src="http://dat-gui.googlecode.com/git/build/dat.gui.min.js"></script>
+<script src="../tcscharts.min.js"></script>
+<meta charset=utf-8 />
+<title>Gauge Test</title>
+</head>
+<body>
+  <div id="test"></div>
+</body>
+<script>
+(function(){
+	var Gauge;
+	if( window.require != undefined ){
+		Gauge = require( "tcs-charts" ).Gauge
+	}
+		Gauge = tcscharts.Gauge
+
+	var gauge = new Gauge( "#test", 50, { width: 750 } )
+	  
+	var gui = new dat.GUI()
+
+	gui.add( gauge, 'value', 0, 100).listen(); 
+
+	var f2 = gui.addFolder('Metrics') 
+	f2.add( gauge, 'width', 30, 800); 
+	f2.add( gauge, 'margin', 0, 50); 
+	f2.add( gauge, 'thicknessFactor', .35, 2);
+	f2.add( gauge, 'needleLengthFactor', .35, 2); 
+	f2.add( gauge, 'startAngle', -90, 90);
+	f2.add( gauge, 'endAngle', -90, 90); 
+
+	var f3 = gui.addFolder('Colors') 
+	f3.addColor( gauge, 'bgColor');
+	f3.addColor( gauge, 'startColor');
+	f3.addColor( gauge, 'endColor'); 
+
+	gui.add( gauge, 'animationDuration', 100, 1000);         
+
+
+	var fn = function(){
+	  gauge.value = Math.random() * 100
+	  return
+	}
+	setInterval( fn, 3000 )
+})()
+</script>
+</html>
