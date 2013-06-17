@@ -189,36 +189,3 @@ module.exports = class Speedo
         @needle.datum().angle = _newAngle
         return "rotate(#{ _newAngle } #{ @opt.height } #{ @opt.height })"
     return
-
-###
-speedo = new Speedo( "#test" )
-  
-gui = new dat.GUI()
-
-
-
-gui.add( speedo, 'value', 0, 100).listen(); 
-
-f2 = gui.addFolder('Metrics') 
-f2.add( speedo, 'width', 30, 800); 
-f2.add( speedo, 'margin', 0, 50); 
-f2.add( speedo, 'thicknessFactor', .35, 2);
-f2.add( speedo, 'needleLengthFactor', .35, 2); 
-f2.add( speedo, 'startAngle', -90, 90);
-f2.add( speedo, 'endAngle', -90, 90); 
-
-f3 = gui.addFolder('Colors') 
-f3.addColor( speedo, 'bgColor');
-f3.addColor( speedo, 'startColor');
-f3.addColor( speedo, 'endColor'); 
-
-
-gui.add( speedo, 'animationDuration', 100, 1000);         
-
-
-fn = ->
-  speedo._set(  Math.random() )
-  return
-
-setInterval( fn, 3000 )
-###
