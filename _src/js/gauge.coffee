@@ -1,7 +1,10 @@
 if module?.exports?
+	_Base = require( "./base.js" )
 	@d3 = require( "d3" )
+else
+	_Base = window.tcscharts.Base
 
-_Gauge = class Gauge
+_Gauge = class Gauge extends _Base
 	
 	defaults: 
 		width: 500
@@ -22,29 +25,8 @@ _Gauge = class Gauge
 	
 	_rad: 2*Math.PI/360
 	
-	getter: ( prop, fnGet, obj = @ )=>
-		Object.defineProperty obj, prop, get: fnGet
-		return
-
-	setter: ( prop, fnGet, obj = @ )=>
-		Object.defineProperty obj, prop, set: fnGet
-		return
-	
-	define: ( prop, oDef, obj )=>
-		Object.defineProperty obj, prop, oDef
-		return
-
-	_extend: ( objects... )=>
-		for object in objects
-			for key, value of object
-				objects[ 0 ][key] = value
-		return objects[ 0 ]
-
 	constructor: ( @target, startValue = 0, options )->
-		try
-			Object.defineProperty @, "testIE", get: ->false
-		catch 
-			return new Error( "browser-outdated", "tcs-charts not availible on IE8 and lower." )
+		_ret = super( @target )
 
 		@_initOptions( options, true )
 		#@_value = startValue
@@ -62,7 +44,7 @@ _Gauge = class Gauge
 		@value = startValue
 
 		@create()		
-		return
+		return _ret
 	
 	_initOptions: ( options, def = false )=>
 		@_extend( @opt = {}, @defaults, options ) if def
@@ -118,7 +100,6 @@ _Gauge = class Gauge
 		@svg = _tgrt.append("svg")
 			.attr( "height", @opt.height + @opt.margin*2 )
 			.attr( "width", @opt.width + @opt.margin*2 )
-			.style( "fill", "#666" )
 			.append("g").attr("transform", "translate(" + @opt.margin + "," + @opt.margin + ")");
 		
 		@bg = @svg.append("path")

@@ -8986,7 +8986,9 @@ d3 = function() {
 require.register("tcs-charts/js/index.js", function(exports, require, module){
 (function() {
   module.exports = {
-    Gauge: require("./gauge")
+    Base: require("./base"),
+    Gauge: require("./gauge"),
+    TimeBars: require("./timebars")
   };
 
 }).call(this);
@@ -8994,22 +8996,99 @@ require.register("tcs-charts/js/index.js", function(exports, require, module){
 });
 require.register("tcs-charts/js/base.js", function(exports, require, module){
 (function() {
+  var Base, _Base,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __slice = [].slice;
 
+  _Base = Base = (function() {
+    Base.prototype.defaults = {};
+
+    Base.prototype.getter = function(prop, fnGet, obj) {
+      if (obj == null) {
+        obj = this;
+      }
+      Object.defineProperty(obj, prop, {
+        get: fnGet
+      });
+    };
+
+    Base.prototype.setter = function(prop, fnGet, obj) {
+      if (obj == null) {
+        obj = this;
+      }
+      Object.defineProperty(obj, prop, {
+        set: fnGet
+      });
+    };
+
+    Base.prototype.define = function(prop, oDef, obj) {
+      Object.defineProperty(obj, prop, oDef);
+    };
+
+    Base.prototype._extend = function() {
+      var key, object, objects, value, _i, _len;
+      objects = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      for (_i = 0, _len = objects.length; _i < _len; _i++) {
+        object = objects[_i];
+        for (key in object) {
+          value = object[key];
+          objects[0][key] = value;
+        }
+      }
+      return objects[0];
+    };
+
+    function Base(target) {
+      var _e;
+      this.target = target;
+      this._extend = __bind(this._extend, this);
+      this.define = __bind(this.define, this);
+      this.setter = __bind(this.setter, this);
+      this.getter = __bind(this.getter, this);
+      try {
+        Object.defineProperty(this, "testIE", {
+          get: function() {
+            return false;
+          }
+        });
+      } catch (_error) {
+        _e = _error;
+        return new Error("browser-outdated", "tcs-charts not availible on IE8 and lower.");
+      }
+      return;
+    }
+
+    return Base;
+
+  })();
+
+  if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null) {
+    module.exports = _Base;
+  } else {
+    window.tcscharts || (window.tcscharts = {});
+    window.tcscharts.Base = _Base;
+  }
 
 }).call(this);
 
 });
 require.register("tcs-charts/js/gauge.js", function(exports, require, module){
 (function() {
-  var Gauge, _Gauge,
+  var Gauge, _Base, _Gauge,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __slice = [].slice;
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null) {
+    _Base = require("./base.js");
     this.d3 = require("d3");
+  } else {
+    _Base = window.tcscharts.Base;
   }
 
-  _Gauge = Gauge = (function() {
+  _Gauge = Gauge = (function(_super) {
+    __extends(Gauge, _super);
+
     Gauge.prototype.defaults = {
       width: 500,
       margin: 0,
@@ -9027,43 +9106,8 @@ require.register("tcs-charts/js/gauge.js", function(exports, require, module){
 
     Gauge.prototype._rad = 2 * Math.PI / 360;
 
-    Gauge.prototype.getter = function(prop, fnGet, obj) {
-      if (obj == null) {
-        obj = this;
-      }
-      Object.defineProperty(obj, prop, {
-        get: fnGet
-      });
-    };
-
-    Gauge.prototype.setter = function(prop, fnGet, obj) {
-      if (obj == null) {
-        obj = this;
-      }
-      Object.defineProperty(obj, prop, {
-        set: fnGet
-      });
-    };
-
-    Gauge.prototype.define = function(prop, oDef, obj) {
-      Object.defineProperty(obj, prop, oDef);
-    };
-
-    Gauge.prototype._extend = function() {
-      var key, object, objects, value, _i, _len;
-      objects = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      for (_i = 0, _len = objects.length; _i < _len; _i++) {
-        object = objects[_i];
-        for (key in object) {
-          value = object[key];
-          objects[0][key] = value;
-        }
-      }
-      return objects[0];
-    };
-
     function Gauge(target, startValue, options) {
-      var oDef,
+      var oDef, _ret,
         _this = this;
       this.target = target;
       if (startValue == null) {
@@ -9081,19 +9125,7 @@ require.register("tcs-charts/js/gauge.js", function(exports, require, module){
       this._angleToRad = __bind(this._angleToRad, this);
       this._initOption = __bind(this._initOption, this);
       this._initOptions = __bind(this._initOptions, this);
-      this._extend = __bind(this._extend, this);
-      this.define = __bind(this.define, this);
-      this.setter = __bind(this.setter, this);
-      this.getter = __bind(this.getter, this);
-      try {
-        Object.defineProperty(this, "testIE", {
-          get: function() {
-            return false;
-          }
-        });
-      } catch (_error) {
-        return new Error("browser-outdated", "tcs-charts not availible on IE8 and lower.");
-      }
+      _ret = Gauge.__super__.constructor.call(this, this.target);
       this._initOptions(options, true);
       oDef = {
         get: function() {
@@ -9109,7 +9141,7 @@ require.register("tcs-charts/js/gauge.js", function(exports, require, module){
       this.define("value", oDef, this);
       this.value = startValue;
       this.create();
-      return;
+      return _ret;
     }
 
     Gauge.prototype._initOptions = function(options, def) {
@@ -9181,7 +9213,7 @@ require.register("tcs-charts/js/gauge.js", function(exports, require, module){
       var _tgrt;
       _tgrt = d3.select(this.target);
       _tgrt.select("svg").remove();
-      this.svg = _tgrt.append("svg").attr("height", this.opt.height + this.opt.margin * 2).attr("width", this.opt.width + this.opt.margin * 2).style("fill", "#666").append("g").attr("transform", "translate(" + this.opt.margin + "," + this.opt.margin + ")");
+      this.svg = _tgrt.append("svg").attr("height", this.opt.height + this.opt.margin * 2).attr("width", this.opt.width + this.opt.margin * 2).append("g").attr("transform", "translate(" + this.opt.margin + "," + this.opt.margin + ")");
       this.bg = this.svg.append("path").style("fill", this.opt.bgColor).attr("class", "bg").attr("transform", "translate(" + this.opt.height + "," + this.opt.height + ")").attr("d", this._arc(this.opt.endAngle));
       this.color = this.svg.append("path").attr("class", "color").attr("transform", "translate(" + this.opt.height + "," + this.opt.height + ")").datum({
         endAngle: this._angleToRad(this._getAngleByFactor(this._value)),
@@ -9271,7 +9303,7 @@ require.register("tcs-charts/js/gauge.js", function(exports, require, module){
 
     return Gauge;
 
-  })();
+  })(_Base);
 
   if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null) {
     module.exports = _Gauge;
@@ -9285,7 +9317,354 @@ require.register("tcs-charts/js/gauge.js", function(exports, require, module){
 });
 require.register("tcs-charts/js/timebars.js", function(exports, require, module){
 (function() {
+  var TimeBars, _Base, _TimeBars,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
+  if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null) {
+    _Base = require("./base.js");
+    this.d3 = require("d3");
+  } else {
+    _Base = window.tcscharts.Base;
+  }
+
+  _TimeBars = TimeBars = (function(_super) {
+    __extends(TimeBars, _super);
+
+    TimeBars.prototype.defaults = {
+      timeKey: "ts",
+      countKey: "count",
+      width: 700,
+      height: 300,
+      margin: 20,
+      spacing: 3,
+      barsColor: "#718EE3",
+      showCount: true,
+      countColorIn: "#fff",
+      countColorOut: "#666",
+      ticks: "minutes",
+      tickFormat: "%I:%M",
+      smallBarWidth: 20,
+      animationDuration: 600
+    };
+
+    function TimeBars(target, data, options) {
+      var _ret;
+      this.target = target;
+      this.data = data != null ? data : [];
+      this._update = __bind(this._update, this);
+      this.reset = __bind(this.reset, this);
+      this.rem = __bind(this.rem, this);
+      this.add = __bind(this.add, this);
+      this.getData = __bind(this.getData, this);
+      this._calcBarWidth = __bind(this._calcBarWidth, this);
+      this.create = __bind(this.create, this);
+      this.fnRect = __bind(this.fnRect, this);
+      this._initOption = __bind(this._initOption, this);
+      this._initOptions = __bind(this._initOptions, this);
+      this._calcMetrics = __bind(this._calcMetrics, this);
+      this.timeFormat = __bind(this.timeFormat, this);
+      _ret = TimeBars.__super__.constructor.call(this, this.target);
+      this._initOptions(options, true);
+      this._calcMetrics();
+      this.create();
+      this.customTimeFormat = this.timeFormat([
+        [
+          d3.time.format("%Y"), function() {
+            return true;
+          }
+        ], [
+          d3.time.format("%B"), function(d) {
+            return d.getMonth();
+          }
+        ], [
+          d3.time.format("%b %d"), function(d) {
+            return d.getDate() !== 1;
+          }
+        ], [
+          d3.time.format("%a %d"), function(d) {
+            return d.getDay() && d.getDate() !== 1;
+          }
+        ], [
+          d3.time.format("%I %p"), function(d) {
+            return d.getHours();
+          }
+        ], [
+          d3.time.format("%I:%M"), function(d) {
+            return d.getMinutes();
+          }
+        ], [
+          d3.time.format(":%S"), function(d) {
+            return d.getSeconds();
+          }
+        ], [
+          d3.time.format(".%L"), function(d) {
+            return d.getMilliseconds();
+          }
+        ]
+      ]);
+      return _ret;
+    }
+
+    TimeBars.prototype.timeFormat = function(formats) {
+      return function(date) {
+        var f, i;
+        i = formats.length - 1;
+        f = formats[i];
+        while (!f[1](date)) {
+          f = formats[--i];
+        }
+        return f[0](date);
+      };
+    };
+
+    TimeBars.prototype._calcMetrics = function() {
+      var times, _d,
+        _this = this;
+      if (this.domainX != null) {
+        this._oldDomainX = this.domainX;
+      }
+      times = (function() {
+        var _i, _len, _ref, _results;
+        _ref = this.data;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          _d = _ref[_i];
+          _results.push(_d[this.opt.timeKey]);
+        }
+        return _results;
+      }).call(this);
+      this.domainX = [d3.min(times), d3.max(times)];
+      this.domainY = [
+        0, d3.max(this.data, (function(d) {
+          return d[_this.opt.countKey];
+        }))
+      ];
+      this.interpolateX = d3.time.scale().domain(this.domainX);
+      this.interpolateY = d3.scale.linear().range([0, this.opt.height - 25]).domain(this.domainY);
+      this._barWidth = this._calcBarWidth();
+      this.interpolateX.range([0, this.opt.width - this._barWidth]).tickFormat(this.customTimeFormat);
+      this.xAxis = d3.svg.axis().scale(this.interpolateX).orient("bottom");
+    };
+
+    TimeBars.prototype._initOptions = function(options, def) {
+      var _k;
+      if (def == null) {
+        def = false;
+      }
+      if (def) {
+        this._extend(this.opt = {}, this.defaults, options);
+      }
+      if (def) {
+        for (_k in this.opt) {
+          this._initOption(_k);
+        }
+      }
+    };
+
+    TimeBars.prototype._initOption = function(key) {
+      var odef,
+        _this = this;
+      odef = {
+        get: function() {
+          return _this.opt[key];
+        },
+        set: function(_v) {
+          _this.opt[key] = _v;
+          switch (key) {
+            case "width":
+            case "height":
+              _this.create();
+              break;
+            default:
+              _this.create();
+          }
+        }
+      };
+      return this.define(key, odef, this);
+    };
+
+    TimeBars.prototype.fnRect = function(update, remove) {
+      var _this = this;
+      if (update == null) {
+        update = false;
+      }
+      if (remove == null) {
+        remove = false;
+      }
+      return function(_el) {
+        var _rect, _txt;
+        _el.attr("class", "bar");
+        if (update) {
+          _el.transition().duration(_this.opt.animationDuration).attrTween("transform", function(d, i, current) {
+            var interX, interY, _h, _ref, _tx, _ty, _x, _y;
+            _ref = current.slice(10, -1).split(","), _tx = _ref[0], _ty = _ref[1];
+            if (remove) {
+              _h = 0;
+            } else {
+              _h = _this.interpolateY(d[_this.opt.countKey]);
+            }
+            _x = _this.interpolateX(new Date(d.ts));
+            _y = _this.opt.height - _h - 25;
+            interX = d3.interpolate(d._x || parseFloat(_tx), _x);
+            interY = d3.interpolate(d._y || parseFloat(_ty), _y);
+            d._x = _x;
+            d._y = _y;
+            d._h = _h;
+            return function(_t) {
+              return "translate(" + (interX(_t)) + "," + (interY(_t)) + ")";
+            };
+          });
+        } else {
+          _el.datum(function(d) {
+            var _h;
+            _h = _this.interpolateY(d[_this.opt.countKey]);
+            d._x = _this.interpolateX(new Date(d.ts));
+            d._y = _this.opt.height - _h - 25;
+            d._h = _h;
+            return d;
+          }).attr("transform", function(d, i) {
+            return "translate(" + d._x + "," + d._y + ")";
+          });
+        }
+        if (update) {
+          _rect = _el.select("rect");
+        } else {
+          _rect = _el.append("rect");
+        }
+        _rect.attr("fill", _this.opt.barsColor);
+        if (update) {
+          _rect.transition().duration(_this.opt.animationDuration).attr("width", function() {
+            return _this._barWidth;
+          }).attr("height", function(d, i) {
+            if (remove) {
+              return 1e-6;
+            } else {
+              return _this.interpolateY(d[_this.opt.countKey]);
+            }
+          });
+        } else {
+          _rect.attr("width", function() {
+            return _this._barWidth;
+          }).attr("height", function(d, i) {
+            if (remove) {
+              return 1e-6;
+            } else {
+              return _this.interpolateY(d[_this.opt.countKey]);
+            }
+          });
+        }
+        if (_this.opt.showCount) {
+          if (update) {
+            _txt = _el.select("text");
+          } else {
+            _txt = _el.append("text");
+          }
+          _txt.attr("class", function() {
+            if (_this._barWidth > _this.opt.smallBarWidth) {
+              return "normal";
+            } else {
+              return "small";
+            }
+          }).attr("transform", function(d) {
+            if (d[_this.opt.countKey] < _this.domainY[1] * .1) {
+              return "translate(" + (_this._barWidth / 2) + ",-5)";
+            } else {
+              return "translate(" + (_this._barWidth / 2) + ",15)";
+            }
+          }).attr("fill", function(d) {
+            if (d[_this.opt.countKey] < _this.domainY[1] * .1) {
+              return _this.opt.countColorOut;
+            } else {
+              return _this.opt.countColorIn;
+            }
+          }).text(function(d) {
+            return d[_this.opt.countKey];
+          });
+        }
+        return _el;
+      };
+    };
+
+    TimeBars.prototype.create = function() {
+      var _tgrt;
+      _tgrt = d3.select(this.target);
+      _tgrt.select("svg").remove();
+      this.svg = _tgrt.append("svg").attr("height", this.opt.height + this.opt.margin * 2).attr("width", this.opt.width + this.opt.margin * 2).append("g").attr("transform", "translate(" + this.opt.margin + "," + this.opt.margin + ")");
+      this.gxAxis = this.svg.append("g").attr("class", "x axis").attr("transform", ("translate(" + (this._barWidth / 2) + ",") + (this.opt.height - 20) + ")").call(this.xAxis);
+      this._update();
+    };
+
+    TimeBars.prototype._calcBarWidth = function() {
+      var _l;
+      _l = this.interpolateX.ticks(d3.time[this.opt.ticks]).length;
+      return (this.opt.width - (_l * this.opt.spacing)) / _l;
+    };
+
+    TimeBars.prototype.getData = function() {
+      return this.data;
+    };
+
+    TimeBars.prototype.add = function(_data) {
+      this.data.push(_data);
+      this._calcMetrics();
+      this._update(true);
+    };
+
+    TimeBars.prototype.rem = function(id) {
+      var idx, _data, _i, _len, _ref, _removed;
+      _removed = false;
+      _ref = this.data;
+      for (idx = _i = 0, _len = _ref.length; _i < _len; idx = ++_i) {
+        _data = _ref[idx];
+        if (!(_data[this.opt.timeKey] === id)) {
+          continue;
+        }
+        this.data.splice(idx, 1);
+        _removed = true;
+        break;
+      }
+      if (_removed) {
+        this._calcMetrics();
+        this._update(true);
+      }
+    };
+
+    TimeBars.prototype.reset = function(data) {
+      this.data = data;
+      this._calcMetrics();
+      this._update(true);
+    };
+
+    TimeBars.prototype._update = function(update) {
+      var _rems,
+        _this = this;
+      if (update == null) {
+        update = false;
+      }
+      this.bars = this.svg.selectAll(".bar").data(this.data, function(_d) {
+        return _d[_this.opt.timeKey];
+      });
+      if (update) {
+        this.gxAxis.transition().duration(this.opt.animationDuration).attr("transform", ("translate(" + (this._barWidth / 2) + ",") + (this.opt.height - 20) + ")").call(this.xAxis);
+        this.bars.transition().duration(this.opt.animationDuration);
+      }
+      this.bars.enter().append("g").call(this.fnRect(false));
+      this.bars.call(this.fnRect(true));
+      _rems = this.bars.exit().call(this.fnRect(true, true)).remove();
+    };
+
+    return TimeBars;
+
+  })(_Base);
+
+  if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null) {
+    module.exports = _TimeBars;
+  } else {
+    window.tcscharts || (window.tcscharts = {});
+    window.tcscharts.TimeBars = _TimeBars;
+  }
 
 }).call(this);
 

@@ -12,6 +12,8 @@
   "main": "js/index.js",
   "scripts": [
     "js/index.js",
-    "js/gauge.js"
+    "js/base.js",
+    "js/gauge.js",
+    "js/timebars.js"
   ]
 }

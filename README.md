@@ -118,9 +118,13 @@ if( gauge instanceof Error ){
 
 ## Changelogs
 
+### 0.2.0
+
+* added Timebars chart module
+
 ### 0.1.1
 
-- added IE8 check and return an error if it's not possible to load a stats module
+* added IE8 check and return an error if it's not possible to load a stats module
 
 ### 0.1.0
 
