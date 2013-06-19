@@ -12,15 +12,20 @@ _TimeBars = class TimeBars extends _Base
 
 		width: 700
 		height: 300
-		margin: 20
+		margin: 
+			top: 20
+			right: 20
+			bottom: 10
+			left: 40
 		spacing: 3
 
 		barsColor: "#718EE3"
-		showCount: true
+		showCount: false
 		countColorIn: "#fff"
 		countColorOut: "#666"
 		ticks: "minutes"
-		tickFormat: "%I:%M"
+		timeFormat: null
+		timeDomain: null
 
 		smallBarWidth: 20
 		animationDuration: 600
@@ -34,42 +39,24 @@ _TimeBars = class TimeBars extends _Base
 
 		@create()
 
-		@customTimeFormat = @timeFormat [
-			[d3.time.format("%Y"), ()->return true ]
-			[d3.time.format("%B"), (d)->return d.getMonth() ]
-			[d3.time.format("%b %d"), (d)->return d.getDate() != 1 ]
-			[d3.time.format("%a %d"), (d)->return d.getDay() && d.getDate() != 1 ]
-			[d3.time.format("%I %p"), (d)->return d.getHours() ]
-			[d3.time.format("%I:%M"), (d)->return d.getMinutes() ]
-			[d3.time.format(":%S"), (d)->return d.getSeconds() ]
-			[d3.time.format(".%L"), (d)->return d.getMilliseconds() ]
-		]
 		return _ret
 
-
-	timeFormat: (formats)=>
-		return ( date )->
-			i = formats.length - 1
-			f = formats[i]
-			while ( not f[ 1 ](date) )
-				f = formats[--i]
-			return f[0](date)
-
 	_calcMetrics: =>
-
 		if @domainX?
 			@_oldDomainX = @domainX
 
-		times = for _d in @data
-			_d[ @opt.timeKey ]
-
-		@domainX = [ d3.min( times ), d3.max( times )]
-		@domainY = [ 0, d3.max( @data, ( ( d )=>d[ @opt.countKey ] ) )]
-
+		if @opt.timeDomain?
+			@domainX = @opt.timeDomain
+			@data = for _dt in @data when _dt[ @opt.timeKey ] > @domainX[ 0 ] and _dt[ @opt.timeKey ] < @domainX[ 1 ]
+				_dt
+		else
+			times = for _d in @data
+				_d[ @opt.timeKey ]
+			@domainX = [ d3.min(times), d3.max(times) ]
+		@domainY = [ d3.max( @data, ( ( d )=>d[ @opt.countKey ] ) ), 0]
+		
 		@interpolateX = d3.time.scale()
 			.domain( @domainX )
-			
-			
  
 		@interpolateY = d3.scale.linear()
 			.range([ 0, @opt.height - 25 ])
@@ -78,20 +65,36 @@ _TimeBars = class TimeBars extends _Base
 		@_barWidth = @_calcBarWidth()
 		
 		@interpolateX
-			.range([0, @opt.width - @_barWidth])
-			.tickFormat( @customTimeFormat )
+			.range([0, @opt.width - @_barWidth ])
 
 
 		@xAxis = d3.svg.axis()
 			.scale(@interpolateX)
 			.orient("bottom")
 
+		@yAxis = d3.svg.axis()
+			.scale(@interpolateY)
+			.tickSize(@opt.width)
+			.orient("left")
+
+		if @opt.tickCount?
+			@xAxis.ticks( @opt.tickCount )
+
+		if @opt.timeFormat?
+			if typeof @opt.timeFormat is "function"
+				@xAxis.tickFormat( @opt.timeFormat )
+			else
+				@xAxis.tickFormat ( date )=>
+						d3.time.format( @opt.timeFormat )( date )
 		return
 
 
 	_initOptions: ( options, def = false )=>
 		@_extend( @opt = {}, @defaults, options ) if def
 		
+		@opt._width = @opt.width + @opt.margin.left + @opt.margin.right
+		@opt._height = @opt.height + @opt.margin.top + @opt.margin.bottom
+
 		if def
 			for _k of @opt 
 				@_initOption( _k )
@@ -128,7 +131,7 @@ _TimeBars = class TimeBars extends _Base
 							_h = @interpolateY( d[ @opt.countKey ] )
 						
 						_x = @interpolateX( new Date( d.ts ) )
-						_y = @opt.height - _h - 25
+						_y = _h
 
 						interX = d3.interpolate( d._x or parseFloat( _tx ), _x )
 						interY = d3.interpolate( d._y or parseFloat( _ty ), _y )
@@ -142,7 +145,7 @@ _TimeBars = class TimeBars extends _Base
 					.datum ( d )=>
 						_h = @interpolateY( d[ @opt.countKey ] )
 						d._x = @interpolateX( new Date( d.ts ) )
-						d._y = @opt.height - _h - 25
+						d._y = _h
 						d._h = _h
 						return d
 					.attr "transform", (d, i)=>
@@ -164,7 +167,7 @@ _TimeBars = class TimeBars extends _Base
 						if remove
 							return 1e-6
 						else
-							return @interpolateY( d[ @opt.countKey ] )
+							return @opt.height - 25 - @interpolateY( d[ @opt.countKey ] )
 			else
 				_rect
 					.attr( "width", => @_barWidth )
@@ -172,7 +175,7 @@ _TimeBars = class TimeBars extends _Base
 						if remove
 							return 1e-6
 						else
-							return @interpolateY( d[ @opt.countKey ] )
+							return @opt.height - 25 - @interpolateY( d[ @opt.countKey ] )
 			
 			if @opt.showCount
 				if update
@@ -181,21 +184,27 @@ _TimeBars = class TimeBars extends _Base
 					_txt = _el.append( "text" )
 
 				_txt
-					.attr "class", =>
-						 if @_barWidth > @opt.smallBarWidth
-						 	return "normal"
-						 else
-						 	return "small"
+					.attr "class", (d)=>
+						_classes = []
+						if @_barWidth > @opt.smallBarWidth
+							_classes.push "normal"
+						else
+							_classes.push "small"
+						if d[ @opt.countKey ] < @domainY[1] * .2
+							_classes.push "low"
+						else
+							_classes.push "high"
+						return _classes.join( " " )
 					.attr "transform", ( d )=>
-						if d[ @opt.countKey ] < @domainY[1] * .1
+						if d[ @opt.countKey ] < @domainY[1] * .2
 							"translate(#{@_barWidth/2},-5)"
 						else
 							"translate(#{@_barWidth/2},15)"
 					.attr "fill", ( d )=>
-						if d[ @opt.countKey ] < @domainY[1] * .1
+						if d[ @opt.countKey ] < @domainY[1] * .2
 							@opt.countColorOut
 						else
-							 @opt.countColorIn
+							@opt.countColorIn
 					.text ( d )=>
 						return d[ @opt.countKey ]
 			return _el
@@ -205,10 +214,10 @@ _TimeBars = class TimeBars extends _Base
 		_tgrt.select( "svg" ).remove()
 
 		@svg = _tgrt.append("svg")
-			.attr( "height", @opt.height + @opt.margin*2 )
-			.attr( "width", @opt.width + @opt.margin*2 )
+			.attr( "height", @opt._height )
+			.attr( "width",  @opt._width )
 			.append("g")
-				.attr("transform", "translate(" + @opt.margin + "," + @opt.margin + ")")
+				.attr("transform", "translate(" + @opt.margin.left + "," + @opt.margin.top + ")")
 
 		
 
@@ -216,6 +225,11 @@ _TimeBars = class TimeBars extends _Base
 			.attr("class", "x axis")
 			.attr("transform", "translate(#{ @_barWidth / 2 }," + ( @opt.height - 20 ) + ")")
 			.call( @xAxis )
+
+		@gyAxis = @svg.append("g")
+			.attr("class", "y axis")
+			.attr("transform", "translate(" + ( @opt.width - 12 ) + ", 0)")
+			.call( @yAxis )
 
 		
 		@_update()
@@ -271,6 +285,12 @@ _TimeBars = class TimeBars extends _Base
 				.duration( @opt.animationDuration )
 				.attr("transform", "translate(#{ @_barWidth / 2 }," + ( @opt.height - 20 ) + ")")
 				.call( @xAxis )
+
+			@gyAxis
+				.transition()
+				.duration( @opt.animationDuration )
+				#.attr("transform", "translate(#{ @_barWidth / 2 }," + ( @opt.height - 20 ) + ")")
+				.call( @yAxis )
 
 
 			@bars

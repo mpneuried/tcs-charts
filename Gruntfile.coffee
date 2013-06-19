@@ -6,7 +6,7 @@ module.exports = (grunt) ->
 		regarde:
 			coffee:
 				files: ["_src/js/*.coffee"]
-				tasks: [ "build" ]
+				tasks: [ "build-dev" ]
 			#stylus:
 			#	files: ["_src/css/*.styl"]
 			#	tasks: [ "stylus" ]
@@ -27,6 +27,11 @@ module.exports = (grunt) ->
 				src: ['js/*.js', "!js/index.js"],
 				dest: 'tcscharts.js'
 
+		copy: 
+			build:
+				src: ['tcscharts.js'],
+				dest: '../WMSearch_stats/js/tcscharts.js'
+
 		uglify: 
 			component:
 				src: [ "build/build.js"],
@@ -37,7 +42,11 @@ module.exports = (grunt) ->
 
 		component:
 			build:
-				options: {}
+				options: 
+					action: 'build'
+			install:
+				options:
+      				action: 'install'
 
 	###
 		stylus:
@@ -54,10 +63,12 @@ module.exports = (grunt) ->
 	grunt.loadNpmTasks "grunt-contrib-stylus"
 	grunt.loadNpmTasks "grunt-contrib-concat"
 	grunt.loadNpmTasks "grunt-contrib-uglify"
+	grunt.loadNpmTasks "grunt-contrib-copy"
 	grunt.loadNpmTasks('grunt-component')
 
 	# ALIAS TASKS
 	grunt.registerTask "watch", "regarde"
 	grunt.registerTask "default", "build"
 
-	grunt.registerTask "build", [ "coffee", "component", "concat", "uglify" ]
+	grunt.registerTask "build-dev", [ "coffee", "component:build", "concat", "copy" ]
+	grunt.registerTask "build", [ "coffee", "component:install", "component:build", "concat", "uglify" ]

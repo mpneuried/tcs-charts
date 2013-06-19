@@ -25,6 +25,7 @@
     "grunt-contrib-coffee": "*",
     "grunt-contrib-stylus": "*",
     "grunt-contrib-concat": "*",
+    "grunt-contrib-copy": "*",
     "grunt-contrib-uglify": "*",
     "grunt-component": "*",
     "grunt": "~0.4.0"

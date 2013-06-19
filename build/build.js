@@ -63,7 +63,6 @@ require.aliases = {};
 
 require.resolve = function(path) {
   if (path.charAt(0) === '/') path = path.slice(1);
-  var index = path + '/index.js';
 
   var paths = [
     path,
@@ -76,10 +75,7 @@ require.resolve = function(path) {
   for (var i = 0; i < paths.length; i++) {
     var path = paths[i];
     if (require.modules.hasOwnProperty(path)) return path;
-  }
-
-  if (require.aliases.hasOwnProperty(index)) {
-    return require.aliases[index];
+    if (require.aliases.hasOwnProperty(path)) return require.aliases[path];
   }
 };
 
@@ -9337,14 +9333,20 @@ require.register("tcs-charts/js/timebars.js", function(exports, require, module)
       countKey: "count",
       width: 700,
       height: 300,
-      margin: 20,
+      margin: {
+        top: 20,
+        right: 20,
+        bottom: 10,
+        left: 40
+      },
       spacing: 3,
       barsColor: "#718EE3",
-      showCount: true,
+      showCount: false,
       countColorIn: "#fff",
       countColorOut: "#666",
       ticks: "minutes",
-      tickFormat: "%I:%M",
+      timeFormat: null,
+      timeDomain: null,
       smallBarWidth: 20,
       animationDuration: 600
     };
@@ -9364,88 +9366,69 @@ require.register("tcs-charts/js/timebars.js", function(exports, require, module)
       this._initOption = __bind(this._initOption, this);
       this._initOptions = __bind(this._initOptions, this);
       this._calcMetrics = __bind(this._calcMetrics, this);
-      this.timeFormat = __bind(this.timeFormat, this);
       _ret = TimeBars.__super__.constructor.call(this, this.target);
       this._initOptions(options, true);
       this._calcMetrics();
       this.create();
-      this.customTimeFormat = this.timeFormat([
-        [
-          d3.time.format("%Y"), function() {
-            return true;
-          }
-        ], [
-          d3.time.format("%B"), function(d) {
-            return d.getMonth();
-          }
-        ], [
-          d3.time.format("%b %d"), function(d) {
-            return d.getDate() !== 1;
-          }
-        ], [
-          d3.time.format("%a %d"), function(d) {
-            return d.getDay() && d.getDate() !== 1;
-          }
-        ], [
-          d3.time.format("%I %p"), function(d) {
-            return d.getHours();
-          }
-        ], [
-          d3.time.format("%I:%M"), function(d) {
-            return d.getMinutes();
-          }
-        ], [
-          d3.time.format(":%S"), function(d) {
-            return d.getSeconds();
-          }
-        ], [
-          d3.time.format(".%L"), function(d) {
-            return d.getMilliseconds();
-          }
-        ]
-      ]);
       return _ret;
     }
 
-    TimeBars.prototype.timeFormat = function(formats) {
-      return function(date) {
-        var f, i;
-        i = formats.length - 1;
-        f = formats[i];
-        while (!f[1](date)) {
-          f = formats[--i];
-        }
-        return f[0](date);
-      };
-    };
-
     TimeBars.prototype._calcMetrics = function() {
-      var times, _d,
+      var times, _d, _dt,
         _this = this;
       if (this.domainX != null) {
         this._oldDomainX = this.domainX;
       }
-      times = (function() {
-        var _i, _len, _ref, _results;
-        _ref = this.data;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          _d = _ref[_i];
-          _results.push(_d[this.opt.timeKey]);
-        }
-        return _results;
-      }).call(this);
-      this.domainX = [d3.min(times), d3.max(times)];
+      if (this.opt.timeDomain != null) {
+        this.domainX = this.opt.timeDomain;
+        this.data = (function() {
+          var _i, _len, _ref, _results;
+          _ref = this.data;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            _dt = _ref[_i];
+            if (_dt[this.opt.timeKey] > this.domainX[0] && _dt[this.opt.timeKey] < this.domainX[1]) {
+              _results.push(_dt);
+            }
+          }
+          return _results;
+        }).call(this);
+      } else {
+        times = (function() {
+          var _i, _len, _ref, _results;
+          _ref = this.data;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            _d = _ref[_i];
+            _results.push(_d[this.opt.timeKey]);
+          }
+          return _results;
+        }).call(this);
+        this.domainX = [d3.min(times), d3.max(times)];
+      }
       this.domainY = [
-        0, d3.max(this.data, (function(d) {
+        d3.max(this.data, (function(d) {
           return d[_this.opt.countKey];
-        }))
+        })), 0
       ];
       this.interpolateX = d3.time.scale().domain(this.domainX);
       this.interpolateY = d3.scale.linear().range([0, this.opt.height - 25]).domain(this.domainY);
       this._barWidth = this._calcBarWidth();
-      this.interpolateX.range([0, this.opt.width - this._barWidth]).tickFormat(this.customTimeFormat);
+      this.interpolateX.range([0, this.opt.width - this._barWidth]);
       this.xAxis = d3.svg.axis().scale(this.interpolateX).orient("bottom");
+      this.yAxis = d3.svg.axis().scale(this.interpolateY).tickSize(this.opt.width).orient("left");
+      if (this.opt.tickCount != null) {
+        this.xAxis.ticks(this.opt.tickCount);
+      }
+      if (this.opt.timeFormat != null) {
+        if (typeof this.opt.timeFormat === "function") {
+          this.xAxis.tickFormat(this.opt.timeFormat);
+        } else {
+          this.xAxis.tickFormat(function(date) {
+            return d3.time.format(_this.opt.timeFormat)(date);
+          });
+        }
+      }
     };
 
     TimeBars.prototype._initOptions = function(options, def) {
@@ -9456,6 +9439,8 @@ require.register("tcs-charts/js/timebars.js", function(exports, require, module)
       if (def) {
         this._extend(this.opt = {}, this.defaults, options);
       }
+      this.opt._width = this.opt.width + this.opt.margin.left + this.opt.margin.right;
+      this.opt._height = this.opt.height + this.opt.margin.top + this.opt.margin.bottom;
       if (def) {
         for (_k in this.opt) {
           this._initOption(_k);
@@ -9506,7 +9491,7 @@ require.register("tcs-charts/js/timebars.js", function(exports, require, module)
               _h = _this.interpolateY(d[_this.opt.countKey]);
             }
             _x = _this.interpolateX(new Date(d.ts));
-            _y = _this.opt.height - _h - 25;
+            _y = _h;
             interX = d3.interpolate(d._x || parseFloat(_tx), _x);
             interY = d3.interpolate(d._y || parseFloat(_ty), _y);
             d._x = _x;
@@ -9521,7 +9506,7 @@ require.register("tcs-charts/js/timebars.js", function(exports, require, module)
             var _h;
             _h = _this.interpolateY(d[_this.opt.countKey]);
             d._x = _this.interpolateX(new Date(d.ts));
-            d._y = _this.opt.height - _h - 25;
+            d._y = _h;
             d._h = _h;
             return d;
           }).attr("transform", function(d, i) {
@@ -9541,7 +9526,7 @@ require.register("tcs-charts/js/timebars.js", function(exports, require, module)
             if (remove) {
               return 1e-6;
             } else {
-              return _this.interpolateY(d[_this.opt.countKey]);
+              return _this.opt.height - 25 - _this.interpolateY(d[_this.opt.countKey]);
             }
           });
         } else {
@@ -9551,7 +9536,7 @@ require.register("tcs-charts/js/timebars.js", function(exports, require, module)
             if (remove) {
               return 1e-6;
             } else {
-              return _this.interpolateY(d[_this.opt.countKey]);
+              return _this.opt.height - 25 - _this.interpolateY(d[_this.opt.countKey]);
             }
           });
         }
@@ -9561,20 +9546,28 @@ require.register("tcs-charts/js/timebars.js", function(exports, require, module)
           } else {
             _txt = _el.append("text");
           }
-          _txt.attr("class", function() {
+          _txt.attr("class", function(d) {
+            var _classes;
+            _classes = [];
             if (_this._barWidth > _this.opt.smallBarWidth) {
-              return "normal";
+              _classes.push("normal");
             } else {
-              return "small";
+              _classes.push("small");
             }
+            if (d[_this.opt.countKey] < _this.domainY[1] * .2) {
+              _classes.push("low");
+            } else {
+              _classes.push("high");
+            }
+            return _classes.join(" ");
           }).attr("transform", function(d) {
-            if (d[_this.opt.countKey] < _this.domainY[1] * .1) {
+            if (d[_this.opt.countKey] < _this.domainY[1] * .2) {
               return "translate(" + (_this._barWidth / 2) + ",-5)";
             } else {
               return "translate(" + (_this._barWidth / 2) + ",15)";
             }
           }).attr("fill", function(d) {
-            if (d[_this.opt.countKey] < _this.domainY[1] * .1) {
+            if (d[_this.opt.countKey] < _this.domainY[1] * .2) {
               return _this.opt.countColorOut;
             } else {
               return _this.opt.countColorIn;
@@ -9591,8 +9584,9 @@ require.register("tcs-charts/js/timebars.js", function(exports, require, module)
       var _tgrt;
       _tgrt = d3.select(this.target);
       _tgrt.select("svg").remove();
-      this.svg = _tgrt.append("svg").attr("height", this.opt.height + this.opt.margin * 2).attr("width", this.opt.width + this.opt.margin * 2).append("g").attr("transform", "translate(" + this.opt.margin + "," + this.opt.margin + ")");
+      this.svg = _tgrt.append("svg").attr("height", this.opt._height).attr("width", this.opt._width).append("g").attr("transform", "translate(" + this.opt.margin.left + "," + this.opt.margin.top + ")");
       this.gxAxis = this.svg.append("g").attr("class", "x axis").attr("transform", ("translate(" + (this._barWidth / 2) + ",") + (this.opt.height - 20) + ")").call(this.xAxis);
+      this.gyAxis = this.svg.append("g").attr("class", "y axis").attr("transform", "translate(" + (this.opt.width - 12) + ", 0)").call(this.yAxis);
       this._update();
     };
 
@@ -9648,6 +9642,7 @@ require.register("tcs-charts/js/timebars.js", function(exports, require, module)
       });
       if (update) {
         this.gxAxis.transition().duration(this.opt.animationDuration).attr("transform", ("translate(" + (this._barWidth / 2) + ",") + (this.opt.height - 20) + ")").call(this.xAxis);
+        this.gyAxis.transition().duration(this.opt.animationDuration).call(this.yAxis);
         this.bars.transition().duration(this.opt.animationDuration);
       }
       this.bars.enter().append("g").call(this.fnRect(false));

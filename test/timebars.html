@@ -28,7 +28,10 @@ body, html{
 .bar text.small{
 	display:none;
 }
-
+.axis.y line {
+  stroke: #ddd;
+  stroke-dasharray: 3,5;
+}
 </style>
 </head>
 <body>
@@ -85,7 +88,7 @@ var randRange = window.rr = function(lowVal, highVal) {
 		TimeBars = tcscharts.TimeBars
 	}
 
-	var timebars = new TimeBars( "#test", data )
+	var timebars = new TimeBars( "#test", data, { spacing:5, timeDomain:[1371114840000,1371114840000 + ( 60000 * 5 )] } )
 	
 	var i = 1;
 	var timer;
@@ -106,14 +109,15 @@ var randRange = window.rr = function(lowVal, highVal) {
 	};
 	window.resetTime = function( count ){
 		var _data = []
+		_max = randRange( 100, 1000 )
 		for( var i = 0; i < count; i++ ){
 			if( randRange( 0, 4 ) >= 1 )
-				_data.push( { "ts": 1371114840000 + ( 60000 * i ), "count": randRange( 0, 1000 ) } );
+				_data.push( { "ts": 1371114840000 + ( 60000 * i ), "count": randRange( 0, _max ) } );
 		}
 		timebars.reset( _data )
 	};
 	var fnReset = function(){
-	  resetTime( randRange( 3, 80 ) )
+	  resetTime( 30 )
 	  return
 	}
 	timer = setInterval( fnReset, 1500 )
