@@ -17,6 +17,26 @@ You can use the [Comopnent package managing](https://github.com/component/compon
 
 `$ components install mpneuried/tcs-charts`
 
+# Init modules
+
+## init via components
+
+First you have to require the "tcs-charts" and get the the Module you want.
+
+```
+Gauge = require( "tcs-charts" ).Gauge;
+
+myGauge = new Gauge( "#example", 30, { width: 300 } );
+```
+
+## init via script-tag
+
+All modules are availible within the object `window.tcscharts`
+
+```
+myGauge = new tcscharts.TimeBars( "#example", 30, { width: 300 } );
+```
+
 # Gauge
 
 ## Example
@@ -42,28 +62,9 @@ You can use the [Comopnent package managing](https://github.com/component/compon
 This will init the default speedo and set a random value between 0 - 100 every second.
 
 
-## Init modules
+## init
 
 **`new Gauge( targetSelector [, startValue ][, options ] )`**
-
-### init via components
-
-First you have to require the "tcs-charts" and get the the Module you want.
-
-```
-Gauge = require( "tcs-charts" ).Gauge;
-
-myGauge = new Gauge( "#example", 30, { width: 300 } );
-```
-
-### init via script-tag
-
-All modules are availible within the object `window.tcscharts`
-
-```
-myGauge = new tcscharts.TimeBars( "#example", 30, { width: 300 } );
-```
-
 
 ###Arguments
 
