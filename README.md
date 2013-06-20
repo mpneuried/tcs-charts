@@ -3,9 +3,9 @@ tcs-charts
 
 D3 Charting helpers
 
-## Speedo
+# Gauge
 
-#### Example
+## Example
 
 ```
 <html>
@@ -16,10 +16,10 @@ D3 Charting helpers
 		<div id="example"></div>
 	</body>
 	<script>
-		Speedo = require( "tcs-charts" ).Speedo;
-		mySpeedo = new Speedo()
+		Gauge = require( "tcs-charts" ).Gauge;
+		myGauge = new Gauge()
 		setIntervall( function(){
-			mySpeedo.value = Math.Math.random() * 100
+			myGauge.value = Math.Math.random() * 100
 		}, 1000 );		
 	</script>
 </html>
@@ -28,19 +28,19 @@ D3 Charting helpers
 This will init the default speedo and set a random value between 0 - 100 every second.
 
 
-#### init
+## init
 
 ```
-Speedo = require( "tcs-charts" ).Speedo;
+Gauge = require( "tcs-charts" ).Gauge;
 
-mySpeedo = new Speedo( "#example", 30, { width: 300 } );
+myGauge = new Gauge( "#example", 30, { width: 300 } );
 ```
 
-First you have to require the "tcs-charts" and get the Speedo component.
+First you have to require the "tcs-charts" and get the Gauge component.
 
-**`new Speedo( targetSelector [, startValue ][, options ] )`**
+**`new Gauge( targetSelector [, startValue ][, options ] )`**
 
-#####Arguments
+###Arguments
 
 - **targetSelector** : *( `String` required )*  
 A simple CSS selector where the speedo should be placed
@@ -73,36 +73,152 @@ A fixed Color. This will overwrite the `startColor` and `endColor` and displays 
   - **animationDuration** : *( `Number` default = 500 )*  
 The duration of the animation in `ms`
 
-#####Getter/Setter
+###Getter/Setter
 
-- **mySpeedo.value** : *( `Number` )*  
+- **myGauge.value** : *( `Number` )*  
 The new value of the speedo
-- **mySpeedo.width** : *( `Number` )*  
+- **myGauge.width** : *( `Number` )*  
 The with of the speedo
-- **mySpeedo.margin** : *( `Number` )*  
+- **myGauge.margin** : *( `Number` )*  
 The margins arround the speedo.
-- **ySpeedo.startAngle** : *( `Number` default = `-75` )*  
+- **yGauge.startAngle** : *( `Number` default = `-75` )*  
 The left starting Angel. The north point is `0°` so it's usually a negative number. Possible are angles between `-90°` to `90°` 
-- **ySpeedo.endAngle** : *( `Number` default = `75` )*  
+- **yGauge.endAngle** : *( `Number` default = `75` )*  
 The right end Angel. The north point is `0°` so it's usually a negative number. Possible are angles between `-90°` to `90°` 
-- **ySpeedo.thicknessFactor** : *( `Float` default = `0.8` )*  
+- **yGauge.thicknessFactor** : *( `Float` default = `0.8` )*  
 A factor to change the thickness of the angle display.
-- **ySpeedo.needleLengthFactor** : *( `Float` default = `thicknessFactor` )*  
+- **yGauge.needleLengthFactor** : *( `Float` default = `thicknessFactor` )*  
 A factor to change the length of the needle. If set to `0` no neelde will be hidden. 
-- **ySpeedo.bgColor** : *( `String` default = `#ddd` )*  
+- **yGauge.bgColor** : *( `String` default = `#ddd` )*  
 The color of the background.
-- **ySpeedo.needleColor** : *( `String` default = `#333` )*  
+- **yGauge.needleColor** : *( `String` default = `#333` )*  
 The color of the needle. 
-- **ySpeedo.startColor** : *( `String` default = `#B4EB57` )*  
+- **yGauge.startColor** : *( `String` default = `#B4EB57` )*  
 The starting color witch references the value `0`
-- **ySpeedo.endColor** : *( `String` default = `#D10000` )*  
+- **yGauge.endColor** : *( `String` default = `#D10000` )*  
 The ending color witch references the value `100`
-- **ySpeedo.fixedColor** : *( `String` default = `null` )*  
+- **yGauge.fixedColor** : *( `String` default = `null` )*  
 A fixed Color. This will overwrite the `startColor` and `endColor` and displays a solid color through the whole vaule range.
-- **ySpeedo.animationDuration** : *( `Number` default = 500 )*  
+- **yGauge.animationDuration** : *( `Number` default = 500 )*  
 The duration of the animation in `ms`
 
-## IE Restrictions
+# Timebars
+
+## Example
+
+```
+<html>
+	<head>
+		<script src="build.js"></script>
+	</head>
+	<body>
+		<div id="example"></div>
+	</body>
+	<script>
+		data = [
+			{ "ts": 1371114780000, "count": 55 },
+			{ "ts": 1371114720000, "count": 54 },
+			{ "ts": 1371114660000, "count": 53 },
+			{ "ts": 1371114540000, "count": 58 },
+			{ "ts": 1371114480000, "count": 10 },
+			{ "ts": 1371114420000, "count": 50 }
+		]
+
+		TimeBars = require( "tcs-charts" ).TimeBars;
+		myTimeBar = new TimeBars( "#{example}", data )
+	</script>
+</html>
+```
+
+This will display 6 bars.
+
+[A functional an more extended example](http://jsbin.com/ixulus/2/embed?live)
+
+## init
+
+```
+data = [ { "ts": 1371114780000, "count": 55 }, { "ts": 1371114720000, "count": 54 } ]
+
+Timebars = require( "tcs-charts" ).Timebars;
+myTimebar = new Timebars( "#example", data, { width: 300 } );
+```
+
+First you have to require the "tcs-charts" and get the TimeBars component.
+
+**`new Timebars( targetSelector , data [, options ] )`**
+
+##Arguments
+
+- **targetSelector** : *( `String` required )*  
+A simple CSS selector where the speedo should be placed
+- **data** : *( `Object[]` required )*  
+An Array of objects with the data. There has to be at least 2 keys per object. Default is `{ "ts": 1371114420000, "count": 50 }` width `ts` as timestamp and `count` as value to display
+- **options** : *( `Object` optional )*  
+Configuration object
+  - **timeKey** : *( `String` default = `ts` )*  
+The key within your objects containing the timestamp
+  - **countKey** : *( `String` default = `count` )*  
+The key within your objects containing the count
+  - **width** : *( `Number` default = `700` )*  
+The with of the chart
+  - **height** : *( `Number` default = `300` )*  
+The height of the chart
+  - **margin** : *( `Object` )*  
+The margin object following the [margin convention](http://bl.ocks.org/mbostock/3019563) of Mike Bostock.
+	  - **margin.top** : *( `Number` default = `20` )*  
+	Top margin.
+	  - **margin.bottom** : *( `Number` default = `10` )*  
+	Bottom margin.
+	  - **margin.left** : *( `Number` default = `40` )*  
+	Left margin.
+	  - **margin.right** : *( `Number` default = `20` )*  
+	Right margin.
+  - **spacing** : *( `Number` default = `3` )*  
+The spacing between each bar
+  - **barsColor** : *( `String` default = null )*  
+The color of the bar. If set to `null` you can also use the selector `.bar` to fill the bars via CSS.
+  - **ticks** : *( `String` default = `minutes` )*  
+The timeing ticks to interpolate the x-axis
+  - **timeFormat** : *( `String|Function` )*  
+A timeformat based on the [D3 time format](https://github.com/mbostock/d3/wiki/Time-Formatting#wiki-format) or a function returning the format by using the `date` form the argument
+  - **timeDomain** : *( `Array` )*  
+An array of size `2` describing the start and end timespan. Values outsite the definition will not be displayed. If not defined the module is using maximum and minimum time of all availible data.
+
+##Methods
+
+### `.getData()`
+
+Get's all calculated data within the chart
+
+**Return**
+
+*( Array )*: An array of all data elements
+
+### `.add( element )`
+
+add a bar to the chart
+ 
+**Arguments**
+
+* `element` *( Object )*: A new data object to add to the chart. 
+
+### `.rem( ts )`
+
+remove a single bar by it's timestamp
+ 
+**Arguments**
+
+* `ts` *( Number )*: Timestamp to remove. 
+
+### `.reset( data )`
+
+reset the whole data of the chart.
+ 
+**Arguments**
+
+* `data` : *( `Object[]` required )*: An Array of objects with the data. There has to be at least 2 keys per object. Default is `{ "ts": 1371114420000, "count": 50 }` width `ts` as timestamp and `count` as value to display
+
+# IE Restrictions
 
 D3 charts and some basic javascript will not work within IE 8 and lower.
 So the constructor of every Staty module will return an Error object if a usage is not possible.
@@ -116,28 +232,28 @@ if( gauge instanceof Error ){
 }
 ```
 
-## Changelogs
+# Changelogs
 
-### 0.2.0
+## 0.2.0
 
 * added Timebars chart module
 
-### 0.1.1
+## 0.1.1
 
 * added IE8 check and return an error if it's not possible to load a stats module
 
-### 0.1.0
+## 0.1.0
 
 * Remamed Speedo to Gauge
 * Added non require solution
 * removed dependencie unserscore
 * added concated and compressed result `tcscharts.js`
 
-### Work in progress
+## Work in progress
 
 `tcs-charts` is work in progress. Your ideas, suggestions etc. are very welcome.
 
-## License 
+# License 
 
 (The MIT License)
 
