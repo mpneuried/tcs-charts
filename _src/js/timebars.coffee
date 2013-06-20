@@ -19,7 +19,7 @@ _TimeBars = class TimeBars extends _Base
 			left: 40
 		spacing: 3
 
-		barsColor: "#718EE3"
+		barsColor: null
 		showCount: false
 		countColorIn: "#fff"
 		countColorOut: "#666"
@@ -117,8 +117,20 @@ _TimeBars = class TimeBars extends _Base
 
 
 	fnRect: ( update = false, remove = false )=>
+		
 		return ( _el )=>
-			_el.attr( "class", "bar" )
+			_el.attr "class", (d)=>
+				_classes = [ "bar" ]
+				if @_barWidth > @opt.smallBarWidth
+					_classes.push "normal"
+				else
+					_classes.push "small"
+				if d[ @opt.countKey ] < @domainY[0] * .2
+					_classes.push "low"
+				else
+					_classes.push "high"
+				return _classes.join( " " )
+
 			if update
 				_el
 					.transition()
@@ -141,6 +153,9 @@ _TimeBars = class TimeBars extends _Base
 						d._h = _h
 						return ( _t )->"translate(#{ interX( _t ) },#{ interY( _t ) })"
 			else
+				_this = @
+				_el.on "mouseenter", ( datum )-> _this._enterRect( @, datum )
+				_el.on "mouseleave", ( datum )-> _this._leaveRect( @, datum )
 				_el
 					.datum ( d )=>
 						_h = @interpolateY( d[ @opt.countKey ] )
@@ -148,6 +163,7 @@ _TimeBars = class TimeBars extends _Base
 						d._y = _h
 						d._h = _h
 						return d
+					
 					.attr "transform", (d, i)=>
 						return "translate(#{ d._x },#{d._y})"
 			if update
@@ -155,8 +171,9 @@ _TimeBars = class TimeBars extends _Base
 			else
 				_rect = _el.append("rect")
 
-			_rect
-				.attr( "fill", @opt.barsColor )
+			if @opt.barsColor?
+				_rect
+					.attr( "fill", @opt.barsColor )
 
 			if update
 				_rect
@@ -179,35 +196,51 @@ _TimeBars = class TimeBars extends _Base
 			
 			if @opt.showCount
 				if update
+					_el.select( ".count" )
+						.attr "class", (d)=>
+							console.log d, d[ @opt.countKey ], @domainY[0] * .2,  @domainY
+							_classes = [ "count" ]
+							if @_barWidth > @opt.smallBarWidth
+								_classes.push "normal"
+							else
+								_classes.push "small"
+							if d[ @opt.countKey ] < @domainY[0] * .2
+								_classes.push "low"
+							else
+								_classes.push "high"
+							return _classes.join( " " )
 					_txt =	_el.select( "text" )
 				else
-					_txt = _el.append( "text" )
+					_el
+						.append( "rect" )
+							.attr( "class", "count" )
+							.attr( "height", 20 )
+							.attr( "width", => @_barWidth - 8 )
+					_txtg = _el
+						.append( "g" )
+						.attr "transform", =>return "translate(#{@_barWidth/2},19)"
+							
+					_txt = _txtg.append( "text" )
+					
+				
 
-				_txt
-					.attr "class", (d)=>
-						_classes = []
-						if @_barWidth > @opt.smallBarWidth
-							_classes.push "normal"
-						else
-							_classes.push "small"
-						if d[ @opt.countKey ] < @domainY[1] * .2
-							_classes.push "low"
-						else
-							_classes.push "high"
-						return _classes.join( " " )
-					.attr "transform", ( d )=>
-						if d[ @opt.countKey ] < @domainY[1] * .2
-							"translate(#{@_barWidth/2},-5)"
-						else
-							"translate(#{@_barWidth/2},15)"
-					.attr "fill", ( d )=>
-						if d[ @opt.countKey ] < @domainY[1] * .2
-							@opt.countColorOut
-						else
-							@opt.countColorIn
-					.text ( d )=>
+					
+
+				_txt.text ( d )=>
 						return d[ @opt.countKey ]
+					#
+					#.attr "fill", ( d )=>
+					#	if d[ @opt.countKey ] < @domainY[0] * .2
+					#		@opt.countColorOut
+					#	else
+					#		@opt.countColorIn
 			return _el
+
+	_enterRect: ( el, datum )=>
+		return
+
+	_leaveRect: ( el, datum )=>
+		return
 
 	create: =>
 		_tgrt = d3.select(@target)

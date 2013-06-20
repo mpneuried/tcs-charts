@@ -343,7 +343,7 @@
         left: 40
       },
       spacing: 3,
-      barsColor: "#718EE3",
+      barsColor: null,
       showCount: false,
       countColorIn: "#fff",
       countColorOut: "#666",
@@ -365,6 +365,8 @@
       this.getData = __bind(this.getData, this);
       this._calcBarWidth = __bind(this._calcBarWidth, this);
       this.create = __bind(this.create, this);
+      this._leaveRect = __bind(this._leaveRect, this);
+      this._enterRect = __bind(this._enterRect, this);
       this.fnRect = __bind(this.fnRect, this);
       this._initOption = __bind(this._initOption, this);
       this._initOptions = __bind(this._initOptions, this);
@@ -482,8 +484,22 @@
         remove = false;
       }
       return function(_el) {
-        var _rect, _txt;
-        _el.attr("class", "bar");
+        var _rect, _txt, _txtg;
+        _el.attr("class", function(d) {
+          var _classes;
+          _classes = ["bar"];
+          if (_this._barWidth > _this.opt.smallBarWidth) {
+            _classes.push("normal");
+          } else {
+            _classes.push("small");
+          }
+          if (d[_this.opt.countKey] < _this.domainY[0] * .2) {
+            _classes.push("low");
+          } else {
+            _classes.push("high");
+          }
+          return _classes.join(" ");
+        });
         if (update) {
           _el.transition().duration(_this.opt.animationDuration).attrTween("transform", function(d, i, current) {
             var interX, interY, _h, _ref, _tx, _ty, _x, _y;
@@ -505,6 +521,13 @@
             };
           });
         } else {
+          _this = _this;
+          _el.on("mouseenter", function(datum) {
+            return _this._enterRect(this, datum);
+          });
+          _el.on("mouseleave", function(datum) {
+            return _this._leaveRect(this, datum);
+          });
           _el.datum(function(d) {
             var _h;
             _h = _this.interpolateY(d[_this.opt.countKey]);
@@ -521,7 +544,9 @@
         } else {
           _rect = _el.append("rect");
         }
-        _rect.attr("fill", _this.opt.barsColor);
+        if (_this.opt.barsColor != null) {
+          _rect.attr("fill", _this.opt.barsColor);
+        }
         if (update) {
           _rect.transition().duration(_this.opt.animationDuration).attr("width", function() {
             return _this._barWidth;
@@ -545,43 +570,43 @@
         }
         if (_this.opt.showCount) {
           if (update) {
+            _el.select(".count").attr("class", function(d) {
+              var _classes;
+              console.log(d, d[_this.opt.countKey], _this.domainY[0] * .2, _this.domainY);
+              _classes = ["count"];
+              if (_this._barWidth > _this.opt.smallBarWidth) {
+                _classes.push("normal");
+              } else {
+                _classes.push("small");
+              }
+              if (d[_this.opt.countKey] < _this.domainY[0] * .2) {
+                _classes.push("low");
+              } else {
+                _classes.push("high");
+              }
+              return _classes.join(" ");
+            });
             _txt = _el.select("text");
           } else {
-            _txt = _el.append("text");
+            _el.append("rect").attr("class", "count").attr("height", 20).attr("width", function() {
+              return _this._barWidth - 8;
+            });
+            _txtg = _el.append("g").attr("transform", function() {
+              return "translate(" + (_this._barWidth / 2) + ",19)";
+            });
+            _txt = _txtg.append("text");
           }
-          _txt.attr("class", function(d) {
-            var _classes;
-            _classes = [];
-            if (_this._barWidth > _this.opt.smallBarWidth) {
-              _classes.push("normal");
-            } else {
-              _classes.push("small");
-            }
-            if (d[_this.opt.countKey] < _this.domainY[1] * .2) {
-              _classes.push("low");
-            } else {
-              _classes.push("high");
-            }
-            return _classes.join(" ");
-          }).attr("transform", function(d) {
-            if (d[_this.opt.countKey] < _this.domainY[1] * .2) {
-              return "translate(" + (_this._barWidth / 2) + ",-5)";
-            } else {
-              return "translate(" + (_this._barWidth / 2) + ",15)";
-            }
-          }).attr("fill", function(d) {
-            if (d[_this.opt.countKey] < _this.domainY[1] * .2) {
-              return _this.opt.countColorOut;
-            } else {
-              return _this.opt.countColorIn;
-            }
-          }).text(function(d) {
+          _txt.text(function(d) {
             return d[_this.opt.countKey];
           });
         }
         return _el;
       };
     };
+
+    TimeBars.prototype._enterRect = function(el, datum) {};
+
+    TimeBars.prototype._leaveRect = function(el, datum) {};
 
     TimeBars.prototype.create = function() {
       var _tgrt;
