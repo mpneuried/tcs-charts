@@ -26,6 +26,29 @@
         top: 0;
         right: 0;
       }
+      .axis path,
+        .axis line {
+          fill: none;
+          stroke: #aaa;
+          shape-rendering: crispEdges;
+        }
+        .axis path{
+            stroke: none;
+        }
+        .axis text{
+            font-size: 11px;
+        }
+        .bar{
+            fill: #718EE3;
+            opacity: .7;
+        }
+        .bar:hover{
+            opacity: 1;
+        }
+        .axis.y line {
+          stroke: #ddd;
+          stroke-dasharray: 3,5;
+        }
     </style>
   </head>
   <body>
@@ -57,6 +80,21 @@
 <a name="tcs-charts" class="anchor" href="#tcs-charts"><span class="octicon octicon-link"></span></a>tcs-charts</h1>
 
 <p>D3 Charting helpers</p>
+
+<h1>Load Scripts</h1>
+
+<h2>as script</h2>
+
+<p>First you have to add <a href="http://d3js.org/">D3.js</a> to your html.
+Then include the script <code>/tcscharts.js</code> or <code>/tcscharts.min.js</code>.</p>
+
+<h2>by components</h2>
+
+<p>There are to options to load the scripts.
+You can use the <a href="https://github.com/component/component/">Comopnent package managing</a> to install the charts with all it's dependecies</p>
+
+<p><code>$ components install mpneuried/tcs-charts</code></p>
+
 
 <h1>Gauge</h1>
 
@@ -169,7 +207,178 @@ The duration of the animation in <code>ms</code></li>
 </ul>
 
 
+<h1>Timebars</h1>
+
+<h2>Example</h2>
+
+<pre><code>&lt;html&gt;
+    &lt;head&gt;
+        &lt;script src="build.js"&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div id="example"&gt;&lt;/div&gt;
+    &lt;/body&gt;
+    &lt;script&gt;
+        data = [
+            { "ts": 1371114780000, "count": 55 },
+            { "ts": 1371114720000, "count": 54 },
+            { "ts": 1371114660000, "count": 53 },
+            { "ts": 1371114540000, "count": 58 },
+            { "ts": 1371114480000, "count": 10 },
+            { "ts": 1371114420000, "count": 50 }
+        ]
+
+        TimeBars = require( "tcs-charts" ).TimeBars;
+        myTimeBar = new TimeBars( "#{example}", data )
+    &lt;/script&gt;
+&lt;/html&gt;
+</code></pre>
+
+<h2>Example</h2>
+
+<div id="timebars-example"></div>
+
+<h2>init</h2>
+
+<pre><code>data = [ { "ts": 1371114780000, "count": 55 }, { "ts": 1371114720000, "count": 54 } ]
+
+Timebars = require( "tcs-charts" ).Timebars;
+myTimebar = new Timebars( "#example", data, { width: 300 } );
+</code></pre>
+
+<p>First you have to require the "tcs-charts" and get the TimeBars component.</p>
+
+<p><strong><code>new Timebars( targetSelector , data [, options ] )</code></strong></p>
+
+<h2>Arguments</h2>
+
+<ul>
+<li><strong>targetSelector</strong> : <em>( <code>String</code> required )</em><br/>
+A simple CSS selector where the speedo should be placed</li>
+<li><strong>data</strong> : <em>( <code>Object[]</code> required )</em><br/>
+An Array of objects with the data. There has to be at least 2 keys per object. Default is <code>{ "ts": 1371114420000, "count": 50 }</code> width <code>ts</code> as timestamp and <code>count</code> as value to display</li>
+<li><strong>options</strong> : <em>( <code>Object</code> optional )</em><br/>
+Configuration object
+
+<ul>
+<li><strong>timeKey</strong> : <em>( <code>String</code> default = <code>ts</code> )</em><br/>
+The key within your objects containing the timestamp</li>
+<li><strong>countKey</strong> : <em>( <code>String</code> default = <code>count</code> )</em><br/>
+The key within your objects containing the count</li>
+<li><strong>width</strong> : <em>( <code>Number</code> default = <code>700</code> )</em><br/>
+The with of the chart</li>
+<li><strong>height</strong> : <em>( <code>Number</code> default = <code>300</code> )</em><br/>
+The height of the chart</li>
+<li><strong>margin</strong> : <em>( <code>Object</code> )</em><br/>
+The margin object following the <a href="http://bl.ocks.org/mbostock/3019563">margin convention</a> of Mike Bostock.
+
+<ul>
+<li><strong>margin.top</strong> : <em>( <code>Number</code> default = <code>20</code> )</em><br/>
+Top margin.</li>
+<li><strong>margin.bottom</strong> : <em>( <code>Number</code> default = <code>10</code> )</em><br/>
+Bottom margin.</li>
+<li><strong>margin.left</strong> : <em>( <code>Number</code> default = <code>40</code> )</em><br/>
+Left margin.</li>
+<li><strong>margin.right</strong> : <em>( <code>Number</code> default = <code>20</code> )</em><br/>
+Right margin.</li>
+</ul>
+</li>
+<li><strong>spacing</strong> : <em>( <code>Number</code> default = <code>3</code> )</em><br/>
+The spacing between each bar</li>
+<li><strong>barsColor</strong> : <em>( <code>String</code> default = null )</em><br/>
+The color of the bar. If set to <code>null</code> you can also use the selector <code>.bar</code> to fill the bars via CSS.</li>
+<li><strong>ticks</strong> : <em>( <code>String</code> default = <code>minutes</code> )</em><br/>
+The timeing ticks to interpolate the x-axis</li>
+<li><strong>timeFormat</strong> : <em>( <code>String|Function</code> )</em><br/>
+A timeformat based on the <a href="https://github.com/mbostock/d3/wiki/Time-Formatting#wiki-format">D3 time format</a> or a function returning the format by using the <code>date</code> form the argument</li>
+<li><strong>timeDomain</strong> : <em>( <code>Array</code> )</em><br/>
+An array of size <code>2</code> describing the start and end timespan. Values outsite the definition will not be displayed. If not defined the module is using maximum and minimum time of all availible data.</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>Methods</h2>
+
+<h3><code>.getData()</code></h3>
+
+<p>Get's all calculated data within the chart</p>
+
+<p><strong>Return</strong></p>
+
+<p><em>( Array )</em>: An array of all data elements</p>
+
+<h3><code>.add( element )</code></h3>
+
+<p>add a bar to the chart</p>
+
+<p><strong>Arguments</strong></p>
+
+<ul>
+<li><code>element</code> <em>( Object )</em>: A new data object to add to the chart.</li>
+</ul>
+
+
+<h3><code>.rem( ts )</code></h3>
+
+<p>remove a single bar by it's timestamp</p>
+
+<p><strong>Arguments</strong></p>
+
+<ul>
+<li><code>ts</code> <em>( Number )</em>: Timestamp to remove.</li>
+</ul>
+
+
+<h3><code>.reset( data )</code></h3>
+
+<p>reset the whole data of the chart.</p>
+
+<p><strong>Arguments</strong></p>
+
+<ul>
+<li><code>data</code> : <em>( <code>Object[]</code> required )</em>: An Array of objects with the data. There has to be at least 2 keys per object. Default is <code>{ "ts": 1371114420000, "count": 50 }</code> width <code>ts</code> as timestamp and <code>count</code> as value to display</li>
+</ul>
+
+
+<h1>IE Restrictions</h1>
+
+<p>D3 charts and some basic javascript will not work within IE 8 and lower.
+So the constructor of every Staty module will return an Error object if a usage is not possible.</p>
+
+<p>So for initialisation ou have to init like this:</p>
+
+<p><code>js
+gauge = new Gauge( "#test", 50, { width: 750 } );
+if( gauge instanceof Error ){
+    // .. do something for IE8 and lower
+}
+</code></p>
+
 <h1>Changelogs</h1>
+
+<h2>0.2.0</h2>
+
+<ul>
+<li>added Timebars chart module</li>
+</ul>
+
+
+<h2>0.1.1</h2>
+
+<ul>
+<li>added IE8 check and return an error if it's not possible to load a stats module</li>
+</ul>
+
+
+<h2>0.1.0</h2>
+
+<ul>
+<li>Remamed Speedo to Gauge</li>
+<li>Added non require solution</li>
+<li>removed dependencie unserscore</li>
+<li>added concated and compressed result <code>tcscharts.js</code></li>
+</ul>
 
 <h2>Work in progress</h2>
 
@@ -220,4 +429,5 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 
   </body>
   <script src="javascripts/example_gauge.js"></script>
+  <script src="javascripts/example_timebars.js"></script>
 </html>
