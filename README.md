@@ -3,6 +3,20 @@ tcs-charts
 
 D3 Charting helpers
 
+# Load Scripts
+
+## as script
+
+First you have to add [D3.js](http://d3js.org/) to your html.
+Then include the script `/tcscharts.js` or `/tcscharts.min.js`.
+
+## by components
+
+There are to options to load the scripts.
+You can use the [Comopnent package managing](https://github.com/component/component/) to install the charts with all it's dependecies
+
+`$ components install mpneuried/tcs-charts`
+
 # Gauge
 
 ## Example
