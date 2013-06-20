@@ -95,6 +95,22 @@ You can use the <a href="https://github.com/component/component/">Comopnent pack
 
 <p><code>$ components install mpneuried/tcs-charts</code></p>
 
+<h1>Init modules</h1>
+
+<h2>init via components</h2>
+
+<p>First you have to require the "tcs-charts" and get the the Module you want.</p>
+
+<div class="highlight"><pre><span class="nx">Gauge</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s2">"tcs-charts"</span> <span class="p">).</span><span class="nx">Gauge</span><span class="p">;</span>
+<span class="nx">myGauge</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Gauge</span><span class="p">(</span> <span class="s2">"#example"</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="p">{</span> <span class="nx">width</span><span class="o">:</span> <span class="mi">300</span> <span class="p">}</span> <span class="p">);</span>
+</pre></div>
+
+<h2>init via script-tag</h2>
+
+<p>All modules are availible within the object <code>window.tcscharts</code></p>
+
+<div class="highlight"><pre><span class="nx">myGauge</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">tcscharts.Gauge</span><span class="p">(</span> <span class="s2">"#example"</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="p">{</span> <span class="nx">width</span><span class="o">:</span> <span class="mi">300</span> <span class="p">}</span> <span class="p">);</span>
+</pre></div>
 
 <h1>Gauge</h1>
 
@@ -125,13 +141,6 @@ You can use the <a href="https://github.com/component/component/">Comopnent pack
 <p>This will init the default gauge and set a random value between 0 - 100 every second.</p>
 
 <h2>Init</h2>
-
-<div class="highlight"><pre><span class="nx">Gauge</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s2">"tcs-charts"</span> <span class="p">).</span><span class="nx">Gauge</span><span class="p">;</span>
-
-<span class="nx">myGauge</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Gauge</span><span class="p">(</span> <span class="s2">"#example"</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="p">{</span> <span class="nx">width</span><span class="o">:</span> <span class="mi">300</span> <span class="p">}</span> <span class="p">);</span>
-</pre></div>
-
-<p>First you have to require the "tcs-charts" and get the Gauge component.</p>
 
 <p><strong><code>new Gauge( targetSelector [, startValue ][, options ] )</code></strong></p>
 
