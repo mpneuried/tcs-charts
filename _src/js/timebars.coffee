@@ -198,7 +198,6 @@ _TimeBars = class TimeBars extends _Base
 				if update
 					_el.select( ".count" )
 						.attr "class", (d)=>
-							console.log d, d[ @opt.countKey ], @domainY[0] * .2,  @domainY
 							_classes = [ "count" ]
 							if @_barWidth > @opt.smallBarWidth
 								_classes.push "normal"

@@ -9573,7 +9573,6 @@ require.register("tcs-charts/js/timebars.js", function(exports, require, module)
           if (update) {
             _el.select(".count").attr("class", function(d) {
               var _classes;
-              console.log(d, d[_this.opt.countKey], _this.domainY[0] * .2, _this.domainY);
               _classes = ["count"];
               if (_this._barWidth > _this.opt.smallBarWidth) {
                 _classes.push("normal");
