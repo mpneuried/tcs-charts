@@ -2,7 +2,7 @@
   "name": "tcs-charts",
   "repo": "mpneuried/tcs-charts",
   "description": "D3 Charting helpers",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "keywords": [],
   "dependencies": {
     "mbostock/d3": "*"

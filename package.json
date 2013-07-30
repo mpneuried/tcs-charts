@@ -1,7 +1,7 @@
 {
   "name": "tcs-charts",
   "description": "D3 Charting helpers",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "private": true,
   "homepage": "",
   "keywords": [ ],
