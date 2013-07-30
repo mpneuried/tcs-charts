@@ -95,9 +95,11 @@ The starting color witch references the value `0`
   - **endColor** : *( `String` default = `#D10000` )*  
 The ending color witch references the value `100`
   - **fixedColor** : *( `String` default = `null` )*  
-A fixed Color. This will overwrite the `startColor` and `endColor` and displays a solid color through the whole vaule range.
+A fixed Color. This will overwrite the `startColor` and `endColor` and displays a solid color through the whole value range.
   - **animationDuration** : *( `Number` default = 500 )*  
 The duration of the animation in `ms`
+  - **useFloat** : *( `Boolean` default = `false` )*  
+If `true` you can use float values from `0-1`. If `false` you can use percentage values from `0-100`.
 
 ###Getter/Setter
 

@@ -22,6 +22,7 @@ _Gauge = class Gauge extends _Base
 		endColor: "#D10000"
 		
 		animationDuration: 500
+		useFloat: false
 	
 	_rad: 2*Math.PI/360
 	
@@ -35,8 +36,10 @@ _Gauge = class Gauge extends _Base
 			get: =>
 				return @_value * 100
 			set: ( _v )=>
-				if _v > 1
+				if not @useFloat
 					_v = _v / 100
+				if _v >= 1
+					_v = 1
 				@_set( _v ) 
 				return
 		@define( "value", oDef, @ )

@@ -9101,7 +9101,8 @@ require.register("tcs-charts/js/gauge.js", function(exports, require, module){
       fixedColor: null,
       startColor: "#B4EB57",
       endColor: "#D10000",
-      animationDuration: 500
+      animationDuration: 500,
+      useFloat: false
     };
 
     Gauge.prototype._rad = 2 * Math.PI / 360;
@@ -9132,8 +9133,11 @@ require.register("tcs-charts/js/gauge.js", function(exports, require, module){
           return _this._value * 100;
         },
         set: function(_v) {
-          if (_v > 1) {
+          if (!_this.useFloat) {
             _v = _v / 100;
+          }
+          if (_v >= 1) {
+            _v = 1;
           }
           _this._set(_v);
         }
